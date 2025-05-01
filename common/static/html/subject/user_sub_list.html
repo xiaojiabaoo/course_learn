@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学习平台</title>
+    <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+    <link rel="stylesheet" href="/static/css/config.css">
+</head>
+<body>
+<html>
+<head>
+    <style>
+        .container::after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .box {
+            float: left;
+            width: 200px;
+            height: 170px;
+            margin-left: 20px;
+            margin-right: 0px;
+            margin-top: 20px;
+            margin-bottom: 0px;
+            background-color: #F6F6F6;
+        }
+
+        .box:not(:nth-child(3n)) {
+            margin-left: 20px;
+            margin-right: 0px;
+            margin-top: 20px;
+            margin-bottom: 0px;
+        }
+
+        .state {
+            width: max-content;
+            color: #fff;
+            position: absolute;
+            /*background: #5FB878;*/
+            display: block;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container"></div>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+<script>
+    layui.use(['layer', 'element', 'form', 'util', 'dropdown'], function () {
+        let element = layui.element;
+        let form = layui.form;
+        let layer = layui.layer;
+        let util = layui.util;
+        let dropdown = layui.dropdown;
+
+        window.operate = function (obj, type, status) {
+            switch (type) {
+                case 1:
+
+                    break
+                case 2:
+                    let msg = ''
+                    if (status == 1) {
+                        msg = '新用户尊享免费试用【' + obj.name + '】课程，删除后不可恢复，确定要删除课程吗？'
+                    } else {
+                        msg = '已购买的【' + obj.name + '】课程，删除后不可恢复，确定要删除课程吗？'
+                    }
+                    layer.msg(msg, {
+                        time: 0,
+                        anim: 2,
+                        shade: [0.8, '#393D49'],
+                        btn: ['删除', '取消'],
+                        yes: function (index, layero) {
+                            let params = '{"subject_id":' + obj.id + '}'
+                            let token = localStorage.getItem("token");
+                            //sendApi(url_set_try, params, "POST", token);
+                            layer.msg('【' + obj.name + '】课程已经删除', {
+                                time: 3000,
+                                anim: 1,
+                            });
+                        }
+                    });
+                    break
+            }
+        }
+
+        window.initGongGe = function () {
+            let params = '{"type":3}'
+            let token = localStorage.getItem("token");
+            let data = sendApi(url_get_sub_list, params, "POST", token)
+            if (data.code == 0) {
+                let result = data.data;
+                let str = ''
+                for (let i = 0; i < result.length; i++) {
+                    let url = '/subject/detail.html?id=' + result[i].subject_id + '&name=' + result[i].subject_name+ '&status=' + result[i].status
+                    str += '<div class="box" style="border-radius: 5px;">'
+                    let expire = ''
+                    let expire_color = ''
+                    switch (result[i].status) {
+                        case 1:
+                            expire = '试用'
+                            expire_color = '#5FB878'
+                            if (result[i].expire) {
+                                expire += '即将到期'
+                                expire_color = 'red'
+                            }
+                            str += '<div class="state" style="background-color: '+expire_color+';font-size: 10px;">&nbsp;'+expire+'&nbsp;</div>'
+                            break
+                        case 2:
+                            expire = '已购'
+                            expire_color = '#1E9FFF'
+                            if (result[i].expire) {
+                                expire += '即将到期'
+                                expire_color = 'red'
+                            }
+                            str += '<div class="state" style="background-color: '+expire_color+';font-size: 10px;">&nbsp;'+expire+'&nbsp;</div>'
+                            break
+                    }
+                    expire_color = '#1E9FFF'
+                    str +=
+                        '<a href="' + url + '"><img src="/static/image/subject/' + result[i].subject_id + '.png" height="120px" width="200px" style="border-radius: 5px;"></a>' +
+                        '<div style="margin-top: 5px;margin-left: 10px;margin-bottom: 5px;">' + result[i].subject_name + '</div>' +
+                        '<span style="font-size: 12px;margin-left: 10px;">学习进度</span>' +
+                        '<div class="layui-progress" lay-filter="progress_'+i+'" style="margin-top: -10px;margin-left: 65px;margin-right: 30px;">' +
+                        '<div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>' +
+                        '</div>' +
+                        '<div style="margin-left: 175px;margin-top: -13px"><a href="javascript:void(0);" onclick="operate(this, 2, ' + result[i].status + ')"><i class="layui-icon layui-icon-delete"></i></a></div>' +
+                        '<div class="layui-btn-container" style="margin-top: 10px;margin-left: 10px;">' +
+                        '</div>' +
+                        '</div>'
+                }
+                $(".container").html(str)
+                element.render()
+                for (let i = 0; i < result.length; i++) {
+                    element.progress('progress_'+i, result[i].progress+'%')
+                }
+                element.render()
+            }
+        }
+        initGongGe()
+    });
+</script>
+
+</body>
+</html>

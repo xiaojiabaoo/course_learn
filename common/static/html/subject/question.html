@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学习平台</title>
+    <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+    <link rel="stylesheet" href="/static/css/config.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div style="margin-top: 10px;"></div>
+<span class="layui-breadcrumb" style="margin-left: 10%;">
+  <a href="/subject/list.html">首页</a>
+  <a id="title2" href="/subject/detail.html"></a>
+  <a id="title3" href="/subject/detail.html"></a>
+  <a id="title4" href="/subject/detail.html"></a>
+  <a id="title5" href="/subject/detail.html"></a>
+</span>
+<div class="layui-row" style="width: 100%;margin-top: 10px;margin-bottom: 20px">
+    <div class="layui-col-md7" style="width: 1100px;margin-left: 10%;">
+        <div class="layui-row grid-demo grid-demo-bg1" style="width: 90%;">
+            <div class="layui-col-md12" style="margin-bottom: 10px;background-color: #FAFAFA;height: 600px;">
+                <div class="layui-row">
+                    <div class="my-layui-col-xs6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <form class="layui-form" action="">
+                                <div id="ques"
+                                     style="margin-top: 20px;margin-left: 50px;margin-bottom: 20px;margin-right: 40px;">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script>
+    layui.use(['layer', 'element', 'form'], function () {
+        let element = layui.element;
+        let form = layui.form;
+        let layer = layui.layer;
+        let request = getRequestParam();
+        let token = localStorage.getItem("token");
+
+        window.checkParam = function (request) {
+            if (request.id == undefined) {
+                layer.msg("页面访问出现问题", {anim: 6});
+                return true
+            }
+            return false
+        }
+        checkParam(request)
+
+        window.initQue = function () {
+            let param = '{"piece_id":' + request.id + ', "subject_id":' + request.sub_id + '}'
+            let data = sendApi(url_get_que_list, param, "POST", token);
+            if (data.code == 0) {
+                let str = ''
+                let result = data.data;
+                for (let i = 0; i < result.length; i++) {
+                    switch (result[i].question_type) {
+                        case 'SINGLE_CHOICE'://单选题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            let options1 = result[i].option;
+                            for (let x = 0; x < options1.length; x++) {
+                                options1[x].content = options1[x].content.replace('<p>', '')
+                                options1[x].content = options1[x].content.replace('</p>', '')
+                                str += '<div style="margin-top: 10px;"><input type="radio" lay-filter="radio_options" id="' + i + '" name="options" value="' + options1[x].title + '" title="' + options1[x].title + '.' + options1[x].content + '"></div>'
+                            }
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 42%;margin-top: 20px">'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary  layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'MULTI_CHOICE'://多选题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            let options2 = result[i].option;
+                            for (let x = 0; x < options2.length; x++) {
+                                options2[x].content = options2[x].content.replace('<p>', '')
+                                options2[x].content = options2[x].content.replace('</p>', '')
+                                str += '<div style="margin-top: 20px;"><input type="checkbox" lay-skin="primary" lay-filter="checkbox_options" name="options_' + i + '" value="' + options2[x].title + '" title="' + options2[x].title + '.' + options2[x].content + '"></div>'
+                            }
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 35%;margin-top: 20px">'
+                            str += '<button type="button" onclick="confirmQue(' + i + ', 0)" class="layui-btn layui-btn-sm layui-btn-primary layui-border-black">确认选项</button>'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'ESSAY'://简答题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            str += '<div style="margin-top: 20px;"><textarea placeholder="请填写问题答案" class="layui-textarea"></textarea></div>'
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 35%;margin-top: 20px">'
+                            str += '<button type="button" onclick="confirmQue(' + i + ', 1)" class="layui-btn layui-btn-sm layui-btn-primary layui-border-black">查看答案</button>'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'ORDER_FILL_BLANK'://填空题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            str += '<div style="margin-top: 20px;"><textarea placeholder="请填写问题答案" class="layui-textarea"></textarea></div>'
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 35%;margin-top: 20px">'
+                            str += '<button type="button" onclick="confirmQue(' + i + ', 1)" class="layui-btn layui-btn-sm layui-btn-primary layui-border-black">查看答案</button>'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'COMPREHENSIVE'://综合题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '<span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            let child = result[i].child_question_data;
+                            let answers = ''
+                            for (let x = 0; x < child.length; x++) {
+                                child[x].question_content = child[x].question_content.replace('<p>', '')
+                                child[x].question_content = child[x].question_content.replace('</p>', '')
+                                str += (x + 1) + '. <span>（' + child[x].score + '分）' + child[x].question_content + '</span>'
+                                let options3 = child[x].option;
+                                for (let y = 0; y < options3.length; y++) {
+                                    options3[y].content = options3[y].content.replace('<p>', '')
+                                    options3[y].content = options3[y].content.replace('</p>', '')
+                                    str += '<div style="margin-top: 10px;"><input type="radio" lay-filter="radio_options_com" id="' + y + '" name="options_' + x + '" value="' + options3[y].title + '" title="' + options3[y].title + '.' + options3[y].content + '"></div>'
+                                }
+                                answers += '<p>'
+                                answers += '<div style="height: 20px;"></div>'
+                                answers += '<div>第' + (x + 1) + '小题答案：' + child[x].question_answer + '</div>'
+                                answers += '<div>解析：' + child[x].analysis + '</div>'
+                                answers += '</p>'
+                            }
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>' + answers + '</div>'
+                            str += '</div>'
+                            str += '<div style="margin-left: 35%;margin-top: 20px">'
+                            str += '<button type="button" onclick="confirmQue(' + i + ', 1)" class="layui-btn layui-btn-sm layui-btn-primary layui-border-black">查看答案</button>'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'MANY_TO_MANY'://情景选择题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            let options4 = result[i].option;
+                            for (let x = 0; x < options4.length; x++) {
+                                options4[x].content = options4[x].content.replace('<p>', '')
+                                options4[x].content = options4[x].content.replace('</p>', '')
+                                str += '<div style="margin-top: 10px;"><input type="checkbox" lay-skin="primary" lay-filter="checkbox_options_may" id="' + i + '_' + x + '" name="options_may_' + i + '" value="' + options4[x].title + '" title="' + options4[x].title + '.' + options4[x].content + '"><span hidden id="checkbox_option_' + i + '_' + x + '"></span></div>'
+                            }
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 35%;margin-top: 20px">'
+                            str += '<button type="button" onclick="confirmQue(' + i + ', 1)" class="layui-btn layui-btn-sm layui-btn-primary layui-border-black">查看答案</button>'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary  layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'JUDGE_CHOICE'://判断题
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            let options5 = result[i].option;
+                            for (let x = 0; x < options5.length; x++) {
+                                options5[x].content = options5[x].content.replace('<p>', '')
+                                options5[x].content = options5[x].content.replace('</p>', '')
+                                str += '<div style="margin-top: 10px;"><input type="radio" lay-filter="radio_options" id="' + i + '" name="options" value="' + options5[x].title + '" title="' + options5[x].title + '.' + options5[x].content + '"></div>'
+                            }
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 42%;margin-top: 20px">'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary  layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        case 'DISORDER_FILL_BLANK':
+                            if (i == 0) {
+                                str += '<div id="que_' + i + '">'
+                            } else {
+                                str += '<div id="que_' + i + '" hidden>'
+                            }
+                            result[i].question_content = result[i].question_content.replace('<p>', '')
+                            result[i].question_content = result[i].question_content.replace('</p>', '')
+                            str += '第' + (i + 1) + '题 <span>（' + result[i].question_source + ' ' + result[i].score + '分）' + result[i].question_content + '</span>'
+                            str += '<div style="margin-top: 20px;"><textarea placeholder="请填写问题答案" class="layui-textarea"></textarea></div>'
+                            str += '<div hidden id="answer_' + i + '" style="margin-top: 20px;color: #FFB800;">'
+                            str += '<div>正确答案：' + result[i].question_answer + '</div>'
+                            str += '<div>出题频率：' + result[i].main_node_frequency + '</div>'
+                            str += '<div>答案解析：' + result[i].analysis + '</div></div>'
+                            str += '<div style="margin-left: 35%;margin-top: 20px">'
+                            str += '<button type="button" onclick="confirmQue(' + i + ', 1)" class="layui-btn layui-btn-sm layui-btn-primary layui-border-black">查看答案</button>'
+                            str += '<button type="button" onclick="lastQue(' + i + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">上一题</button>'
+                            str += '<button type="button" onclick="nextQue(' + i + ', ' + result.length + ')" class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue">下一题</button>'
+                            str += '</div>'
+                            str += '</div>'
+                            break;
+                        default :
+                            break;
+                    }
+
+                }
+                $("#ques").html(str)
+                form.render()
+                $(".layui-col-md12").height($("#que_0").height() + 40)
+            }
+        }
+        initQue()
+
+        form.on('radio(radio_options)', function (data) {
+            $("#answer_" + data.elem.id).show()
+            $(".layui-col-md12").height($("#que_" + data.elem.id).height() + 40)
+            form.render();
+        });
+
+        form.on('checkbox(checkbox_options_may)', function (data) {
+            let id = data.elem.id;
+            let split = id.split("_");
+            if (data.elem.checked == true) {
+                let length = $("input:checkbox[name='options_may_" + split[0] + "']:checked").length;
+                $("#checkbox_option_" + split[0] + '_' + split[1]).show()
+                $("#checkbox_option_" + split[0] + '_' + split[1]).text("第" + length + "处答案")
+            } else {
+                $("#checkbox_option_" + split[0] + '_' + split[1]).hide()
+                $("#checkbox_option_" + split[0] + '_' + split[1]).text("")
+            }
+            form.render();
+        });
+
+        window.confirmQue = function (index, type) {
+            let length = $("input:checkbox[name='options_" + index + "']:checked").length;
+            if (type == 0 && length == 0) {
+                layer.msg('请先选择你认为正确的选项', {anim: 6});
+                return false
+            }
+            $("#answer_" + index).show()
+            $(".layui-col-md12").height($("#que_" + index).height() + 40)
+            form.render();
+        }
+
+        window.nextQue = function (index, length) {
+            if (length - 1 == index) {
+                layer.msg('已经是最后一题', {anim: 6});
+                return false
+            }
+            $("#que_" + index).hide()
+            $("#answer_" + index).hide()
+            $("#answer_" + (index + 1)).hide()
+            $("#que_" + (index + 1)).show()
+            $(".layui-col-md12").height($("#que_" + (index + 1)).height() + 40)
+        }
+
+        window.lastQue = function (index) {
+            if (index == 0) {
+                layer.msg('已经是第一题', {anim: 6});
+                return false
+            }
+            $("#que_" + index).hide()
+            $("#que_" + (index - 1)).show()
+            $(".layui-col-md12").height($("#que_" + (index - 1)).height() + 40)
+        }
+
+        $("#title2").text(request.sub_name)
+        $("#title3").text(request.cha_name)
+        $("#title4").text(request.sec_name)
+        $("#title5").text(request.pie_name)
+
+        $("#title2").attr("href", '/subject/detail.html?id=' + request.sub_id + '&name=' + request.sub_name + '&status=' + request.status)
+        $("#title3").attr("href", '/subject/detail.html?id=' + request.sub_id + '&name=' + request.sub_name + '&status=' + request.status)
+        $("#title4").attr("href", '/subject/detail.html?id=' + request.sub_id + '&name=' + request.sub_name + '&status=' + request.status)
+        $("#title5").attr("href", '/subject/detail.html?id=' + request.sub_id + '&name=' + request.sub_name + '&status=' + request.status)
+    });
+</script>
+</body>
+</html>

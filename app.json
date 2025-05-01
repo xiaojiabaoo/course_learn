@@ -1,0 +1,25 @@
+{
+  "mysql": {
+    "hostname": "127.0.0.1",
+    "username": "root",
+    "password": "xiaoben",
+    "port": 3306,
+    "database": "course_information"
+  },
+  "redis": {
+    "hostname": "127.0.0.1",
+    "username": "",
+    "password": "",
+    "port": 6379,
+    "database": 0
+  },
+  "app": {
+    "name": "course_learn",
+    "port": 8080
+  },
+  "log": {
+    "flag": 1,
+    "level": "NULL"
+  }
+}
+

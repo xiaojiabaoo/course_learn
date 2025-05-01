@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学习平台</title>
+    <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+    <link rel="stylesheet" href="/static/css/config.css">
+    <style>
+        .layui-col-md12 {
+            width: 99%;
+        }
+
+        .layui-col-md3 {
+            width: 23%;
+        }
+
+        #logo {
+            border-radius: 3px;
+            height: 270px;
+            /*width: 480px;*/
+            width: 90%;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+        }
+
+        #img {
+            margin-left: 72%;
+        }
+
+        .layui-col-md12 layui-col-md9 layui-col-md3 {
+            border-radius: 5px;
+        }
+
+        .my-layui-col-xs6 {
+            float: left;
+            width: 50%;
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .layui-menu {
+            position: relative;
+            margin: 5px 0;
+            background-color: #FAFAFA;
+        }
+
+        .layui-menu .layui-menu-item-divider {
+            margin: 5px 0;
+            padding: 0;
+            height: 0;
+            line-height: 0;
+            border-bottom: 0px solid #eee;
+            overflow: hidden;
+        }
+
+        .box {
+            float: left;
+            width: 200px;
+            height: 50px;
+            margin-bottom: 10px;
+            background-color: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div style="margin-top: 10px;"></div>
+<span class="layui-breadcrumb" style="margin-left: 10%;">
+  <a href="/subject/list.html">首页</a>
+  <a id="title2" href="index.html"></a>
+</span>
+<div class="layui-row" style="width: 100%;margin-top: 10px;margin-bottom: 20px">
+    <div class="layui-col-md7" style="width: 1100px;margin-left: 10%;">
+        <div class="layui-row grid-demo grid-demo-bg1" style="width: 90%;">
+            <div class="layui-col-md12" style="margin-bottom: 10px;background-color: #FAFAFA;height: 360px;">
+                <div class="layui-row">
+                    <div class="my-layui-col-xs6">
+                        <div class="grid-demo grid-demo-bg1">
+                            <img src="" id="logo">
+                            <div id="img">
+                                <i class="layui-icon layui-icon-share">&nbsp;分享</i>&nbsp;&nbsp;
+                                <i class="layui-icon layui-icon-star">&nbsp;收藏</i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="grid-demo" style="margin-top: 30px;">
+                            <span><h2 id="title"></h2></span>
+                            <div style="background-color: #eeeeee; width: 90%;height: 60px;margin-top: 20px;">
+                                <div style="height: 15px;"></div>
+                                <span style="color: #c2c2c2;font-size: 13px;margin-left: 40px;">价格</span>&nbsp;&nbsp;
+                                <span style="color: #FFB800;font-size: 25px;">999.00</span>&nbsp;元
+                                <div style="margin-top: 30px;color: #c2c2c2;">
+                                    学习有效期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长期有效
+                                </div>
+                                <div style="margin-top: 130px;margin-left: 70%;">
+                                    <button type="button" onclick="operate(1)" class="layui-btn layui-btn-normal layui-btn-sm try">
+                                        试用
+                                    </button>
+                                    <button type="button" onclick="operate(2)" class="layui-btn layui-btn-warm layui-btn-sm buy">
+                                        立即购买
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md9" id="tabs" style="margin-right: 10px;background-color: #FAFAFA;height: 400px;">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li lay-id="info" class="layui-this" style="width: 29.3%">简介</li>
+                        <li lay-id="learn" style="width: 29.3%">学习目录</li>
+                        <li lay-id="comment" style="width: 29.3%">学员评价</li>
+                    </ul>
+                    <div class="layui-tab-content"
+                         style="height: 100px;line-height: 27px;margin-left: 30px;margin-right: 30px;">
+                        <div class="layui-tab-item layui-show">
+                            <h2 style="margin-bottom: 10px;">简介</h2>
+                            <span id="desc"></span>
+                        </div>
+                        <div class="layui-tab-item">
+                            <h2 style="margin-bottom: 10px;">学习目录</h2>
+                            <div class="layui-panel">
+                                <ul class="layui-menu" id="docDemoMenu1"></ul>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            <h2 style="margin-bottom: 10px;">学员评价</h2>
+                            <span id="evaluate">暂无评价</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3" style="background-color: #FAFAFA;height: 400px;">
+                <div class="layui-tab layui-tab-brief" lay-filter="">
+                    <ul class="layui-tab-title">
+                        <li style="font-weight: bolder">推荐</li>
+                    </ul>
+                    <div class="layui-tab-content"
+                         style="height: 100px;margin-left: 15px;margin-right: 15px;line-height: 27px;">
+                        <div id="hot_recommend" class="layui-tab-item layui-show"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="layui-fixbar" style="bottom: 75px;"><li class="layui-icon layui-fixbar-top" lay-type="top" style="display: none;"></li></ul>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+<script>
+    layui.use(['layer', 'element', 'form', 'util', 'dropdown'], function () {
+        let element = layui.element;
+        let layer = layui.layer;
+        let dropdown = layui.dropdown;
+        let request = getRequestParam();
+        let token = localStorage.getItem("token");
+        let status = request.status;
+
+        window.checkParam = function (request) {
+            if (request.name == undefined || request.id == undefined || request.status == undefined) {
+                layer.msg("页面访问出现问题", {anim: 6});
+                return true
+            }
+            return false
+        }
+        checkParam(request)
+
+        window.onscroll = function (data) {
+            //获取滚动条高度
+            let windScrollTop = document.documentElement.scrollTop;
+            if (windScrollTop >= 400) {
+                $(".layui-fixbar-top").show()
+            } else {
+                $(".layui-fixbar-top").hide()
+            }
+        };
+
+        $(".layui-fixbar-top").click(function () {
+            scrollTop()
+        });
+
+        window.initParam = function () {
+            if (status == 1) {
+                $(".try").attr("disabled", "true")
+                $(".try").addClass("layui-btn-disabled")
+            }
+            $("#title2").text(request.name)
+            $("#title2").attr("href", '/subject/detail.html?id=' + request.id + '&name=' + request.name + '&status=' + status);
+        }
+        initParam()
+
+        window.initHotRecommend = function () {
+            let params = '{"type":4}'
+            let token = localStorage.getItem("token");
+            let data = sendApi(url_get_sub_list, params, "POST", token)
+            if (data.code == 0) {
+                let result = data.data;
+                let str = ''
+                for (let i = 0; i < result.length; i++) {
+                    let url = '/subject/detail.html?id=' + result[i].subject_id + '&name=' + result[i].subject_name+ '&status=' + result[i].status
+                    str += '<div class="box" style="border-radius: 5px;">'
+                    str += '<table>'
+                    str += '<tr>'
+                    str += '<td>'
+                    str += '<a href="'+url+'">'
+                    str += '<img src="/static/image/subject/' + result[i].subject_id + '.png" height="50px" width="100px" style="border-radius: 5px;">'
+                    str += '</a>'
+                    str += '</td>'
+                    str += '<td>'
+                    str += '<a href="'+url+'">'
+                    str += '<div style="font-size: 12px;margin-left: 8px;line-height: 16px;">'+result[i].subject_name+'</div>'
+                    str += '</a>'
+                    str += '</td>'
+                    str += '</tr>'
+                    str += '</table>'
+                    str += '</div>'
+                }
+                $("#hot_recommend").html(str)
+                element.render()
+            }
+        }
+        initHotRecommend()
+
+        dropdown.on('click(docDemoMenu1)', function (options) {
+            if (status == 0) {
+                layer.msg('试用或购买课程【' + request.name + '】后才能学习', {anim: 6});
+                return false
+            }
+            let params = '{"piece_id":' + options.id + '}'
+            sendApi(url_set_lean_record, params, "POST", token);
+            window.location = '/subject/question.html?id=' + options.id + '&sec_name=' + options.sec_name +
+                '&cha_name=' + options.cha_name + '&sub_name=' + request.name + '&pie_name=' + options.pie_name +
+                '&sub_id=' + request.id + '&status=' + status
+        });
+
+        window.initCatalogue = function () {
+            let param = '{"subject_id":' + request.id + '}'
+            let data = sendApi(url_get_cha_list, param, "POST")
+            if (data.code == 0) {
+                let result = data.data;
+                let str = ''
+                for (let i = 0; i < result.length; i++) {
+                    str +=
+                        '<li class="layui-menu-item-divider"></li>' +
+                        '<li class="layui-menu-item-group layui-menu-item-down" lay-options="{type: \'group\'}">' +
+                        '<div class="layui-menu-body-title">' + result[i].sequence + '：' + result[i].name + '<i class="layui-icon layui-icon-up"></i></div>'
+                    let section = result[i].section;
+                    for (let y = 0; y < section.length; y++) {
+                        let piece = section[y].piece;
+                        if (piece.length == 0) {
+                            str +=
+                                '<ul>' +
+                                '<li lay-options="{id: ' + section[y].id + ', sec_name: \'' + section[y].name + '\', cha_name: \'' + result[i].name + '\'}">' +
+                                '<div class="layui-menu-body-title">' + section[y].sequence + '：' + section[y].name + '</div>' +
+                                '</li>' +
+                                '</ul>'
+                        } else {
+                            str +=
+                                '<ul>' +
+                                '<li class="layui-menu-item-group layui-menu-item-down" lay-options="{type: \'group\'}">' +
+                                '<div class="layui-menu-body-title">' + section[y].sequence + '：' + section[y].name + '<i class="layui-icon layui-icon-up"></i></div>'
+                            for (let x = 0; x < piece.length; x++) {
+                                str +=
+                                    '<ul>' +
+                                    '<li lay-options="{id: ' + piece[x].id + ', sec_name: \'' + section[y].name + '\', cha_name: \'' + result[i].name + '\', pie_name: \'' + piece[x].name + '\'}">' +
+                                    '<div class="layui-menu-body-title">第' + (x + 1) + '课时：' + piece[x].name + '</div>' +
+                                    '</li>' +
+                                    '</ul>'
+                            }
+                            str +=
+                                '</li>' +
+                                '</ul>'
+                        }
+                    }
+                    str +=
+                        '</li>' +
+                        '<li class="layui-menu-item-divider"></li>'
+                }
+                $("#docDemoMenu1").html(str)
+            }
+        }
+
+        element.on('tab(docDemoTabBrief)', function () {
+            let layId = this.getAttribute('lay-id');
+            let height = ''
+            switch (layId) {
+                case "info":
+                    height = '400px'
+                    break
+                case "learn":
+                    initCatalogue()
+                    height = $("#docDemoMenu1").height() + 140 + 'px'
+                    break
+                case "comment":
+                    height = '400px'
+                    break
+            }
+            $("#tabs").height(height)
+        });
+
+        $("#logo").attr("src", "/static/image/subject/" + request.id + ".png")
+        $("#title").text(request.name)
+
+        window.operate = function (type) {
+            if (checkParam(request)) {
+                return false
+            }
+            switch (type) {
+                case 1:
+                    layer.msg('新用户尊享免费试用15天【' + request.name + '】课程，点击即可试用', {
+                        time: 0,
+                        anim: 2,
+                        shade: [0.8, '#393D49'],
+                        btn: ['立即试用', '取消'],
+                        yes: function (index, layero) {
+                            let params = '{"subject_id":' + request.id + '}'
+                            let data = sendApi(url_set_sub_try, params, "POST", token);
+                            if (data.code == 0) {
+                                $(".try").attr("disabled", true);
+                                $(".try").addClass("layui-btn-disabled");
+                                status = 1
+                                layer.msg('【' + request.name + '】课程已经开始试用，快去学习吧', {
+                                    time: 3000,
+                                    anim: 1,
+                                });
+                            }
+                        }
+                    });
+                    break
+                case 2:
+                    layer.msg('服务器升级维护中，课程【' + request.name + '】暂不可购买', {anim: 6});
+                    break
+            }
+        }
+
+        window.initSub = function () {
+            if (checkParam(request)) {
+                return false
+            }
+            let param = '{"subject_id":' + request.id + '}'
+            let data = sendApi(url_get_sub_detail, param, "POST");
+            if (data.code == 0) {
+                $("#desc").text(data.data.desc)
+            }
+        }
+        initSub()
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学习平台</title>
+    <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+    <link rel="stylesheet" href="/static/css/config.css">
+    <style>
+        .layui-col-md12 {
+            width: 99%;
+        }
+
+        .layui-col-md3 {
+            width: 23%;
+        }
+
+        #logo {
+            border-radius: 3px;
+            height: 270px;
+            /*width: 480px;*/
+            width: 90%;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            margin-left: 30px;
+        }
+
+        #img {
+            margin-left: 72%;
+        }
+
+        .layui-col-md12 layui-col-md9 layui-col-md3 {
+            border-radius: 5px;
+        }
+
+        .my-layui-col-xs6 {
+            float: left;
+            width: 50%;
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .layui-menu {
+            position: relative;
+            margin: 5px 0;
+            background-color: #FAFAFA;
+        }
+
+        .layui-menu .layui-menu-item-divider {
+            margin: 5px 0;
+            padding: 0;
+            height: 0;
+            line-height: 0;
+            border-bottom: 0px solid #eee;
+            overflow: hidden;
+        }
+
+        .box {
+            float: left;
+            width: 200px;
+            height: 50px;
+            margin-bottom: 10px;
+            background-color: #eeeeee;
+        }
+    </style>
+</head>
+<body>
+<div style="margin-top: 10px;"></div>
+<span class="layui-breadcrumb" style="margin-left: 10%;">
+  <a href="/subject/list.html">首页</a>
+  <a id="title2" href="index.html">个人信息</a>
+</span>
+<div class="layui-row" style="width: 100%;margin-top: 10px;margin-bottom: 20px">
+    <div class="layui-col-md7" style="width: 1100px;margin-left: 10%;">
+        <div class="layui-row grid-demo grid-demo-bg1" style="width: 90%;">
+            <div class="layui-col-md12" style="margin-bottom: 10px;background-color: #FAFAFA;height: 620px;">
+                <div class="layui-row">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item" style="margin-left: 50px;margin-top: 40px;">
+                            <!--<label class="layui-form-label">头像</label>-->
+                            <div class="layui-input-block">
+                                <div class="layui-upload">
+                                    <div class="layui-upload-list">
+                                        <img class="layui-upload-img" style="border-radius: 50px;margin-left: 275px;"
+                                             id="logoImg" src="/static/image/logo/morentouxiang.png" height="100px" width="100px">
+                                        <p id="demoText"></p>
+                                        <input type="hidden" name="logo" id="logo"/>
+                                    </div>
+                                    <!--<div style="margin-left: 310px">
+                                        <button type="button"
+                                                class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs"
+                                                id="logoBtn">更换
+                                        </button>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">昵称</label>
+                            <div class="layui-input-block" style="width: 590px;">
+                                <input type="text" id="nick_name" name="nick_name" lay-verify="nick_name" value=""
+                                       autocomplete="off" placeholder="请输入昵称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="gender" lay-filter="gender" value="1" title="男">
+                                <input type="radio" name="gender" lay-filter="gender" value="2" title="女">
+                                <input type="radio" name="gender" lay-filter="gender" value="0" title="不透露">
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">手机号码</label>
+                            <div class="layui-input-inline" style="width: 590px;">
+                                <input type="text" id="phone" name="phone" lay-verify="phone" value=""
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                            <!--<div class="layui-form-mid layui-word-aux" style="display: none;" id="phone_bind_add">去绑定</div>
+                            <div class="layui-form-mid layui-word-aux" style="display: none;" id="phone_bind_edit">更换绑定</div>-->
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">电子邮箱</label>
+                            <div class="layui-input-inline" style="width: 590px;">
+                                <input type="text" id="email" name="email" lay-verify="email" value="" disabled
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid layui-word-aux" style="display: none;" id="email_bind_add">去绑定</div>
+                            <div class="layui-form-mid layui-word-aux" style="display: none;" id="email_bind_edit">更换绑定</div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">所在地</label>
+                            <div class="layui-input-inline">
+                                <select id="province" lay-filter="initCity">
+                                    <option value="">请选择省</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select id="city" lay-filter="initCountry">
+                                    <option value="">请选择市</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select id="country">
+                                    <option value="">请选择县/区</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">注册时间</label>
+                            <div class="layui-input-block" style="width: 80%;">
+                                <span class="layui-form-label" id="addTime" style="width: 130px;"></span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-left: 50px;">
+                            <label class="layui-form-label">账号状态</label>
+                            <div class="layui-input-block" style="width: 80%;" id="account_status">
+                                <span class="layui-form-label" style="color: green;"></span>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block" style="margin-left: 460px;margin-top: 20px">
+                                <button type="submit" class="layui-btn  layui-btn-sm" lay-submit="" lay-filter="demo1">
+                                    保存信息
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="layui-fixbar" style="bottom: 75px;">
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="display: none;"></li>
+</ul>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+<script>
+    layui.use(['layer', 'form', 'upload'], function () {
+        let layer = layui.layer;
+        let form = layui.form;
+        let upload = layui.upload;
+        let request = getRequestParam();
+        let token = localStorage.getItem("token");
+
+        window.initCountry = function (val) {
+            let str = ''
+            for (let i = 0; i < maps.length; i++) {
+                let city = maps[i].city
+                for (let x = 0; x < city.length; x++) {
+                    let name = city[x].name
+                    let area = city[x].area
+                    if (val != name) {
+                        continue
+                    }
+                    for (let y = 0; y < area.length; y++) {
+                        str += '<option value="' + area[y] + '">' + area[y] + '</option>'
+                    }
+                }
+            }
+            $("#country").html(str)
+            form.render()
+        }
+
+        window.initCity = function (val) {
+            let str = ''
+            for (let i = 0; i < maps.length; i++) {
+                let name = maps[i].name
+                let city = maps[i].city
+                if (val != name) {
+                    continue
+                }
+                for (let x = 0; x < city.length; x++) {
+                    str += '<option value="' + city[x].name + '">' + city[x].name + '</option>'
+                    if (x == 0) {
+                        initCountry(city[x].name)
+                    }
+                }
+            }
+            $("#city").html(str)
+            form.render()
+        }
+
+        window.initProvince = function () {
+            let str = ''
+            for (let i = 0; i < maps.length; i++) {
+                str += '<option value="' + maps[i].name + '">' + maps[i].name + '</option>'
+                if (i == 0) {
+                    initCity(maps[i].name)
+                }
+            }
+            $("#province").html(str)
+
+
+            form.render()
+        }
+        initProvince()
+
+        form.on('select(initCity)', function (data) {
+            initCity(data.value)
+        });
+
+        form.on('select(initCountry)', function (data) {
+            initCountry(data.value)
+        });
+
+        window.dateTime = function (datetime) {
+            let date = new Date(datetime);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+            let year = date.getFullYear(),
+            month = ("0" + (date.getMonth() + 1)).slice(-2),
+            sdate = ("0" + date.getDate()).slice(-2),
+            hour = ("0" + date.getHours()).slice(-2),
+            minute = ("0" + date.getMinutes()).slice(-2),
+            second = ("0" + date.getSeconds()).slice(-2);
+            let result = year + "-"+ month +"-"+ sdate +" "+ hour +":"+ minute +":" + second;
+            return result;
+        }
+
+        window.initUserData = function () {
+            let params = '{}'
+            let data = sendApi(url_get_user_data, params, "POST", token)
+            let result = data.data
+            if (data.code == 0) {
+                //$(".layui-upload-img").attr('href', "http://127.0.0.1:8080/static/image/log/morentouxiang.png")
+                $("#nick_name").val(result.nick_name)
+                if (result.phone > 0) {
+                    $("#phone").val(result.phone)
+                    $("#phone_bind_edit").show()
+                } else {
+                    $("#phone_bind_add").show()
+                }
+                $("#email").val(result.email)
+                if (result.email == '') {
+                    $("#email_bind_add").show()
+                } else {
+                    $("#email_bind_edit").show()
+                }
+                $("#addTime").text(dateTime(result.add_time*1000))
+                if (result.account_status == 0) {
+                    $("#account_status").html('<span class="layui-form-label" style="color: green;">正常</span>')
+                } else {
+                    $("#account_status").html('<span class="layui-form-label" style="color: green;">异常</span>')
+                }
+                let area = result.area;
+                let split = area.split('-');
+                if (split.length >= 3) {
+                    $("#province").val(split[0])
+                    initCity(split[0])
+                    $("#city").val(split[1])
+                    initCountry(split[1])
+                    $("#country").val(split[2])
+                }
+                $("input[name='gender'][value='" + result.gender + "']").attr("checked", true);
+                form.render()
+            }
+        }
+        initUserData()
+
+        form.on('submit(demo1)', function(data){
+            //let params = JSON.stringify(data.field)
+            let logo = ""
+            let nick_name = data.field.nick_name
+            let gender = data.field.gender
+            let phone = data.field.phone
+            let email = data.field.email
+            let area = $("#province").val()+"-"+$("#city").val()+"-"+$("#country").val()
+            let params = '{"logo":"'+logo+'","nick_name":"'+nick_name+'","gender":'+gender+',"phone":"'+phone+'",' +
+                '"email":"'+email+'","area":"'+area+'"}'
+            let result = sendApi(url_set_user_data, params, "POST", token)
+            if (result.code === 0) {
+                layer.msg("保存成功", {anim: 1})
+            } else {
+                layer.msg(result.msg, {anim: 6});
+            }
+            return false;
+        });
+
+        /*upload.render({
+            elem: '#logoBtn',
+            url: url_upload, //改成您自己的上传接口
+            headers:{},
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#logoImg').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.ret > 0) {
+                    return layer.msg('上传失败', {icon: 2, anim: 6});
+                } else {
+                    $("#logo").val(res.data.src);
+                    //上传成功
+                    let postData = save_hero_data();
+                    if (postData.ret == 0 || postData.ret == "0") {
+                        layer.msg(postData.msg, {icon: 1}, function (index) {
+
+                        })
+                    } else {
+                        layer.msg(postData.msg, {icon: 2, anim: 6});
+                    }
+
+                }
+            },
+            error: function () {
+                //失败状态，并实现重传
+                var demoText = $('#logoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    upload.upload();
+                });
+            }
+        });*/
+    });
+</script>
+</body>
+</html>
