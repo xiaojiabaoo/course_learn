@@ -45,110 +45,110 @@ func (a ApiQuestion) GetQuestionData(param req_model.GetQuestionData) ([]resp_mo
 		return data, err
 	}
 	if sub.Id == 0 {
-		return data, custErr.New(custErr.USER_NOT_TRY_ORBUY_ERROR,"")
+		return data, custErr.New(custErr.USER_NOT_TRY_ORBUY_ERROR, "")
 	}
 	questionData, err = apiQuestion.GetQuestionData(param.PieceId)
 	if err != nil {
 		return data, err
 	}
 	for _, v := range questionData {
-		if v.TOption.Id == 0 {
+		if v.OptionId == 0 {
 			continue
 		}
-		key := fmt.Sprintf(`%d%s`, v.TQuestion.Id, v.TOption.Title)
+		key := fmt.Sprintf(`%d%s`, v.Id, v.OptionTitle)
 		if _, ok := temp3Map[key]; ok {
 			continue
 		}
-		optionMap[v.TQuestion.Id] = append(optionMap[v.TQuestion.Id], resp_model.Option{
-			Id:         v.TOption.Id,
-			QuestionId: v.TOption.QuestionId,
-			Sequence:   v.TOption.Sequence,
-			Title:      v.TOption.Title,
-			Content:    v.TOption.Content,
-			Correct:    v.TOption.Correct,
+		optionMap[v.Id] = append(optionMap[v.Id], resp_model.Option{
+			Id:         v.OptionId,
+			QuestionId: v.Id,
+			Sequence:   v.OptionSequence,
+			Title:      v.OptionTitle,
+			Content:    v.OptionContent,
+			Correct:    v.OptionCorrect,
 		})
 		temp3Map[key] = struct{}{}
 	}
 	for _, v := range questionData {
 		var childQuestion = make([]resp_model.ChildQuestionData, 0, 0)
-		if _, ok := temp1Map[v.TQuestion.Id]; ok {
+		if _, ok := temp1Map[v.Id]; ok {
 			continue
 		}
-		if v.TQuestion.QuestionType == "COMPREHENSIVE" {
-			childQuestionData, err = apiQuestion.GetChildQuestionData(v.TQuestion.Id, param.PieceId)
+		if v.QuestionType == "COMPREHENSIVE" {
+			childQuestionData, err = apiQuestion.GetChildQuestionData(v.Id, param.PieceId)
 			if err != nil {
 				return data, err
 			}
 			var childOptionMap = make(map[int64][]resp_model.Option)
 			for _, v2 := range childQuestionData {
-				if v2.TOption.Id == 0 {
+				if v2.OptionId == 0 {
 					continue
 				}
-				key := fmt.Sprintf(`%d%s`, v2.TChildQuestion.Id, v2.TOption.Title)
+				key := fmt.Sprintf(`%d%s`, v2.Id, v2.OptionTitle)
 				if _, ok := temp4Map[key]; ok {
 					continue
 				}
-				childOptionMap[v2.TChildQuestion.Id] = append(childOptionMap[v2.TChildQuestion.Id], resp_model.Option{
-					Id:         v2.TOption.Id,
-					QuestionId: v2.TOption.QuestionId,
-					Sequence:   v2.TOption.Sequence,
-					Title:      v2.TOption.Title,
-					Content:    v2.TOption.Content,
-					Correct:    v2.TOption.Correct,
+				childOptionMap[v2.Id] = append(childOptionMap[v2.Id], resp_model.Option{
+					Id:         v2.OptionId,
+					QuestionId: v2.Id,
+					Sequence:   v2.OptionSequence,
+					Title:      v2.OptionTitle,
+					Content:    v2.OptionContent,
+					Correct:    v2.OptionCorrect,
 				})
 				temp4Map[key] = struct{}{}
 			}
 			for _, v2 := range childQuestionData {
-				if _, ok := temp2Map[v2.TChildQuestion.Id]; ok {
+				if _, ok := temp2Map[v2.Id]; ok {
 					continue
 				}
 				c := resp_model.ChildQuestionData{
-					Id:                v2.TChildQuestion.Id,
-					PieceId:           v2.TChildQuestion.PieceId,
-					Sequence:          v2.TChildQuestion.Sequence,
-					QuestionType:      v2.TChildQuestion.QuestionType,
-					QuestionSource:    v2.TChildQuestion.QuestionSource,
-					QuestionContent:   v2.TChildQuestion.QuestionContent,
-					QuestionAnswer:    v2.TChildQuestion.QuestionAnswer,
-					Score:             v2.TChildQuestion.Score,
-					MainNodeId:        v2.TChildQuestion.MainNodeId,
-					MainNodeName:      v2.TChildQuestion.MainNodeName,
-					MainNodeFrequency: v2.TChildQuestion.MainNodeFrequency,
-					Favorite:          v2.TChildQuestion.Favorite,
-					CanPhoto:          v2.TChildQuestion.CanPhoto,
-					AvgCorrectRate:    v2.TChildQuestion.AvgCorrectRate,
-					AnalysisType:      v2.TChildQuestion.AnalysisType,
-					Analysis:          v2.TChildQuestion.Analysis,
+					Id:                v2.Id,
+					PieceId:           v2.PieceId,
+					Sequence:          v2.Sequence,
+					QuestionType:      v2.QuestionType,
+					QuestionSource:    v2.QuestionSource,
+					QuestionContent:   v2.QuestionContent,
+					QuestionAnswer:    v2.QuestionAnswer,
+					Score:             v2.Score,
+					MainNodeId:        v2.MainNodeId,
+					MainNodeName:      v2.MainNodeName,
+					MainNodeFrequency: v2.MainNodeFrequency,
+					Favorite:          v2.Favorite,
+					CanPhoto:          v2.CanPhoto,
+					AvgCorrectRate:    v2.AvgCorrectRate,
+					AnalysisType:      v2.AnalysisType,
+					Analysis:          v2.Analysis,
 				}
-				if _, ok := childOptionMap[v2.TChildQuestion.Id]; ok {
-					c.Option = childOptionMap[v2.TChildQuestion.Id]
+				if _, ok := childOptionMap[v2.Id]; ok {
+					c.Option = childOptionMap[v2.Id]
 				} else {
 					c.Option = []resp_model.Option{}
 				}
 				childQuestion = append(childQuestion, c)
-				temp2Map[v2.TChildQuestion.Id] = struct{}{}
+				temp2Map[v2.Id] = struct{}{}
 			}
 		}
 		getQuestionData := resp_model.GetQuestionData{
-			Id:                v.TQuestion.Id,
-			PieceId:           v.TQuestion.PieceId,
-			Sequence:          v.TQuestion.Sequence,
-			QuestionType:      v.TQuestion.QuestionType,
-			QuestionSource:    v.TQuestion.QuestionSource,
-			QuestionContent:   v.TQuestion.QuestionContent,
-			QuestionAnswer:    v.TQuestion.QuestionAnswer,
-			Score:             v.TQuestion.Score,
-			MainNodeId:        v.TQuestion.MainNodeId,
-			MainNodeName:      v.TQuestion.MainNodeName,
-			MainNodeFrequency: v.TQuestion.MainNodeFrequency,
-			Favorite:          v.TQuestion.Favorite,
-			CanPhoto:          v.TQuestion.CanPhoto,
-			AvgCorrectRate:    v.TQuestion.AvgCorrectRate,
-			AnalysisType:      v.TQuestion.AnalysisType,
-			Analysis:          v.TQuestion.Analysis,
+			Id:                v.Id,
+			PieceId:           v.PieceId,
+			Sequence:          v.Sequence,
+			QuestionType:      v.QuestionType,
+			QuestionSource:    v.QuestionSource,
+			QuestionContent:   v.QuestionContent,
+			QuestionAnswer:    v.QuestionAnswer,
+			Score:             v.Score,
+			MainNodeId:        v.MainNodeId,
+			MainNodeName:      v.MainNodeName,
+			MainNodeFrequency: v.MainNodeFrequency,
+			Favorite:          v.Favorite,
+			CanPhoto:          v.CanPhoto,
+			AvgCorrectRate:    v.AvgCorrectRate,
+			AnalysisType:      v.AnalysisType,
+			Analysis:          v.Analysis,
 		}
-		if _, ok := optionMap[v.TQuestion.Id]; ok {
-			getQuestionData.Option = optionMap[v.TQuestion.Id]
+		if _, ok := optionMap[v.Id]; ok {
+			getQuestionData.Option = optionMap[v.Id]
 		} else {
 			getQuestionData.Option = []resp_model.Option{}
 		}
@@ -158,7 +158,7 @@ func (a ApiQuestion) GetQuestionData(param req_model.GetQuestionData) ([]resp_mo
 			getQuestionData.ChildQuestionData = []resp_model.ChildQuestionData{}
 		}
 		data = append(data, getQuestionData)
-		temp1Map[v.TQuestion.Id] = struct{}{}
+		temp1Map[v.Id] = struct{}{}
 	}
 	return data, nil
 }

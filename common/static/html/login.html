@@ -61,7 +61,7 @@
                         </div>
                         <div class="layui-form-item">
                             <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
-                            <input type="password" name="verification_code" value="" lay-verify="required"
+                            <input type="text" name="verification_code" value="" lay-verify="required"
                                    autocomplete="off" placeholder="验证码" class="layui-input"
                                    style="background:rgba(0,0,0,0);font-weight: bolder;">
                             <div class="layui-form-mid layui-word-aux">
@@ -108,6 +108,12 @@
                             <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
                             <input type="password" name="manager_pass" value="" lay-verify="required|manager_pass"
                                    autocomplete="off" placeholder="请输入管理员密码" class="layui-input"
+                                   style="background:rgba(0,0,0,0);font-weight: bolder;">
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layadmin-user-login-icon layui-icon layui-icon-password"></label>
+                            <input type="password" name="identifier" value="" lay-verify="required|identifier"
+                                   autocomplete="off" placeholder="请输入识别码" class="layui-input"
                                    style="background:rgba(0,0,0,0);font-weight: bolder;">
                         </div>
                         <div class="layui-form-item">
@@ -176,43 +182,57 @@
             let verification_code = 0
             let password = ''
             let login_type = 0
+            let login_way = 0
+            let manager_account = ''
+            let manager_pass = ''
+            let identifier = 0
             switch (obj.elem.id) {
                 case 'btn1':
                     username = $("input[name='username']").val();
                     verification_code = parseInt($("input[name='verification_code']").val());
                     login_type = 1
+                    login_way = 2
                     break
                 case 'btn2':
                     username = $("input[name='account']").val();
                     password = $("input[name='password']").val();
                     login_type = 2
+                    login_way = 2
                     break
                 case 'btn3':
-                    layer.msg('功能暂未开放', {icon: 2, anim: 6});
+                    username = $("input[name='manager_account']").val();
+                    password = $("input[name='manager_pass']").val();
+                    identifier = $("input[name='identifier']").val();
+                    login_way = 3
                     break
             }
             let params = '{' +
-                '"login_way": 2,' +
+                '"login_way": '+login_way+',' +
                 '"login_type": ' + login_type + ',' +
                 '"account": "' + username + '",' +
                 '"security_code":' + verification_code + ',' +
                 '"password":"' + password + '",' +
                 '"area_code":"",' +
+                '"identifier":"' + identifier + '",' +
                 '"ip":"127.0.0.1"' +
                 '}';
             let data = sendApi(url_login, params, "POST")
             if (data.code == 0) {
-                localStorage.removeItem("token")
-                localStorage.removeItem("user_image")
-                localStorage.removeItem("user_name")
-                localStorage.removeItem("account")
-                localStorage.removeItem("token_time")
-                localStorage.setItem("token", data.data.token)
-                localStorage.setItem("user_image", data.data.logo)
-                localStorage.setItem("user_name", data.data.nick_name)
-                localStorage.setItem("account", data.data.account)
-                localStorage.setItem("token_time", expire_date)
-                window.location.href = "/main" + hash
+                if (login_way == 3) {
+                    localStorage.removeItem("manage_token")
+                    localStorage.setItem("manage_token", data.data.token)
+                    window.location.href = "/manager_main" + hash
+                } else {
+                    localStorage.removeItem("token")
+                    localStorage.removeItem("user_image")
+                    localStorage.removeItem("user_name")
+                    localStorage.removeItem("account")
+                    localStorage.setItem("token", data.data.token)
+                    localStorage.setItem("user_image", data.data.logo)
+                    localStorage.setItem("user_name", data.data.nick_name)
+                    localStorage.setItem("account", data.data.account)
+                    window.location.href = "/main" + hash
+                }
             }
         });
     });

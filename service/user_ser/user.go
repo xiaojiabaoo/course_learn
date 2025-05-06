@@ -24,6 +24,8 @@ type User interface {
 	GetLoginRecord(param req_model.GetLoginRecord) (resp_model.GetLoginRecordData, error)
 	GetOrderList(param req_model.GetOrderList) (resp_model.GetOrderListData, error)
 	GetLearnRecord(param req_model.GetLearnRecord) (resp_model.GetLearnRecordData, error)
+	GetUserList(param req_model.GetUserList) (resp_model.GetUserListData, error)
+	EditUserData(param req_model.EditUserData) error
 }
 
 type ApiUser struct{}
@@ -164,11 +166,24 @@ func (a *ApiUser) ChangePassword(param req_model.ChangePassword) error {
 	if err != nil {
 		return errors.Wrap(err, "删除验证码失败")
 	}
-	//验证码通过后开始修改密码
-	return apiUser.ChangePassword(mysql_model.Users{
+	// 验证码通过后开始修改密码
+	err = apiUser.ChangePassword(mysql_model.Users{
 		Id:       param.UserId,
 		Password: fmt.Sprintf(tools.USER_DEFAULT_PASS, param.NewPassword),
 	})
+	if err != nil {
+		return err
+	}
+	tokenUuid := redisx.Redis.Get(fmt.Sprintf(tools.USER_LOGIN_KEY, param.UserId))
+	err = redisx.Redis.Del(fmt.Sprintf(tools.USER_LOGIN_TOKEN_KEY, tokenUuid))
+	if err != nil {
+		return errors.Wrap(err, "删除用户原有Token失败")
+	}
+	err = redisx.Redis.Del(fmt.Sprintf(tools.USER_LOGIN_KEY, param.UserId))
+	if err != nil {
+		return errors.Wrap(err, "删除用户原有Token失败")
+	}
+	return nil
 }
 
 func (a *ApiUser) GetLoginRecord(param req_model.GetLoginRecord) (resp_model.GetLoginRecordData, error) {
@@ -176,7 +191,7 @@ func (a *ApiUser) GetLoginRecord(param req_model.GetLoginRecord) (resp_model.Get
 		apiUser = user_dao.ApiUser{}
 		total   int64
 		err     error
-		data    = make([]mysql_model.UserLoginLogs, 0)
+		data    = make([]resp_model.UserLoginLogs, 0)
 		list    = resp_model.GetLoginRecordData{}
 	)
 	if param.Size <= 0 {
@@ -198,7 +213,9 @@ func (a *ApiUser) GetLoginRecord(param req_model.GetLoginRecord) (resp_model.Get
 			LoginIp:     v.LoginIp,
 			LoginArea:   v.LoginArea,
 			LoginMethod: v.LoginMethod,
-			DateTime:    v.DateTime.Format("2006-01-02 15:04:05"),
+			NickName:    v.NickName,
+			Email:       v.Email,
+			Phone:       v.Phone,
 		})
 	}
 	return list, nil
@@ -237,6 +254,9 @@ func (a *ApiUser) GetOrderList(param req_model.GetOrderList) (resp_model.GetOrde
 			SubjectId:      v.SubjectId,
 			SubjectName:    v.SubjectName,
 			AddTime:        v.AddTime,
+			NickName:       v.NickName,
+			Phone:          v.Phone,
+			Email:          v.Email,
 		})
 	}
 	return list, nil
@@ -244,11 +264,16 @@ func (a *ApiUser) GetOrderList(param req_model.GetOrderList) (resp_model.GetOrde
 
 func (a *ApiUser) GetLearnRecord(param req_model.GetLearnRecord) (resp_model.GetLearnRecordData, error) {
 	var (
-		apiUser = user_dao.ApiUser{}
-		total   int64
-		err     error
-		data    = make([]mysql_model.UserLearnRecord, 0)
-		list    = resp_model.GetLearnRecordData{}
+		apiUser   = user_dao.ApiUser{}
+		total     int64
+		err       error
+		data      = make([]mysql_model.UserLearnRecord, 0)
+		list      = resp_model.GetLearnRecordData{}
+		userIds   = make([]int64, 0)
+		userIdMap = make(map[int64]int64)
+		users     = make([]mysql_model.Users, 0)
+		userMap   = make(map[int64]mysql_model.Users)
+		index     int
 	)
 	if param.Size <= 0 {
 		param.Size = 20
@@ -256,15 +281,92 @@ func (a *ApiUser) GetLearnRecord(param req_model.GetLearnRecord) (resp_model.Get
 	if param.Page <= 0 {
 		param.Page = 1
 	}
+	if param.Action == tools.MANAGER_LOGIN {
+		userIds = make([]int64, 0)
+		users = make([]mysql_model.Users, 0)
+		if len(param.NickName) > 0 {
+			users, err = apiUser.GetUserByNickName(param.NickName)
+			if err != nil {
+				return list, err
+			}
+			for _, v := range users {
+				userIds = append(userIds, v.Id)
+			}
+			index++
+		}
+		users = make([]mysql_model.Users, 0)
+		if len(userIds) > 0 && len(param.Phone) > 0 {
+			users, err = apiUser.GetUserByPhone(param.Phone)
+			if err != nil {
+				return list, err
+			}
+			for _, v := range users {
+				userIds = append(userIds, v.Id)
+			}
+			index++
+		}
+		users = make([]mysql_model.Users, 0)
+		if len(userIds) > 0 && len(param.Email) > 0 {
+			users, err = apiUser.GetUserByEmail(param.Email)
+			if err != nil {
+				return list, err
+			}
+			for _, v := range users {
+				userIds = append(userIds, v.Id)
+			}
+			if len(users) == 0 {
+				userIds = make([]int64, 0)
+			}
+			index++
+		}
+		for _, v := range userIds {
+			userIdMap[v] += 1
+		}
+
+		if index >= 1 {
+			if index == 1 {
+				param.UserIds = userIds
+			} else {
+				for id, v := range userIdMap {
+					if v == 1 {
+						index = -1
+					} else if v >= 2 {
+						param.UserIds = append(param.UserIds, id)
+					}
+				}
+			}
+			if len(param.UserIds) == 0 || index == -1 {
+				param.UserIds = append(param.UserIds, -1)
+			}
+		}
+	}
 	data, total, err = apiUser.GetLearnRecord(param)
 	if err != nil {
 		return list, err
+	}
+	if param.Action == tools.MANAGER_LOGIN {
+		userIds = make([]int64, 0)
+		users = make([]mysql_model.Users, 0)
+		// 查询用户信息
+		for _, v := range data {
+			userIds = append(userIds, v.UserId)
+		}
+		users, err = apiUser.GetUserByIds(userIds)
+		if err != nil {
+			return list, err
+		}
+		for _, v := range users {
+			userMap[v.Id] = v
+		}
 	}
 	list.Count = total
 	for _, v := range data {
 		list.List = append(list.List, resp_model.LearnRecordData{
 			Id:          v.Id,
 			UserId:      v.UserId,
+			NickName:    userMap[v.UserId].NickName,
+			Email:       userMap[v.UserId].Email,
+			Phone:       userMap[v.UserId].Phone,
 			PackageId:   v.PackageId,
 			PackageName: v.PackageName,
 			SubjectId:   v.SubjectId,
@@ -279,4 +381,64 @@ func (a *ApiUser) GetLearnRecord(param req_model.GetLearnRecord) (resp_model.Get
 		})
 	}
 	return list, nil
+}
+
+func (a *ApiUser) GetUserList(param req_model.GetUserList) (resp_model.GetUserListData, error) {
+	var (
+		apiUser = user_dao.ApiUser{}
+		total   int64
+		err     error
+		data    = make([]mysql_model.Users, 0)
+		list    = resp_model.GetUserListData{}
+	)
+	if param.Size <= 0 {
+		param.Size = 20
+	}
+	if param.Page <= 0 {
+		param.Page = 1
+	}
+	data, total, err = apiUser.GetUserList(param)
+	if err != nil {
+		return list, err
+	}
+	list.Count = total
+	for _, v := range data {
+		list.List = append(list.List, resp_model.UserListData{
+			Id:            v.Id,
+			NickName:      v.NickName,
+			Gender:        v.Gender,
+			Logo:          v.Logo,
+			AreaCode:      v.AreaCode,
+			Phone:         v.Phone,
+			Email:         v.Email,
+			Password:      v.Password,
+			Area:          v.Area,
+			AddTime:       v.AddTime,
+			UpdateTime:    v.UpdateTime,
+			AccountStatus: v.AccountStatus,
+		})
+	}
+	return list, nil
+}
+
+func (a *ApiUser) EditUserData(param req_model.EditUserData) error {
+	var (
+		apiUser = user_dao.ApiUser{}
+	)
+	if param.UserId <= 0 {
+		return custErr.New(custErr.USER_ID_EMPTY_ERROR, "")
+	}
+	if param.AccountStatus > 0 {
+		// 删除用户登录状态
+		tokenUuid := redisx.Redis.Get(fmt.Sprintf(tools.USER_LOGIN_KEY, param.UserId))
+		err := redisx.Redis.Del(fmt.Sprintf(tools.USER_LOGIN_TOKEN_KEY, tokenUuid))
+		if err != nil {
+			return errors.Wrap(err, "删除用户原有Token失败")
+		}
+		err = redisx.Redis.Del(fmt.Sprintf(tools.USER_LOGIN_KEY, param.UserId))
+		if err != nil {
+			return errors.Wrap(err, "删除用户原有Token失败")
+		}
+	}
+	return apiUser.EditUserData(param)
 }

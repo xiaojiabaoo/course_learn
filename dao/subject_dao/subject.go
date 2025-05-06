@@ -12,7 +12,7 @@ type Subject interface {
 	GetUserTrySubList(req_model.TrySubject) ([]mysql_model.UserOrder, error)
 	AddTrySubject(mysql_model.UserOrder) error
 	GetSubjectDetail(subjectId int64) (*mysql_model.TSubject, error)
-	GetSubjectByPieceId(pieceId int64) ([]map[string]string, error)
+	GetSubjectByPieceId(pieceId int64) ([]mysql_model.SubjectByPiece, error)
 	GetSubjectPiece(subjectId []int64) ([]mysql_model.SubjectByPieceId, error)
 }
 
@@ -20,16 +20,17 @@ type ApiSubject struct{}
 
 func (a *ApiSubject) GetSubjectData(userId, types, time int64) ([]mysql_model.TSubjectChapter, error) {
 	subject := make([]mysql_model.TSubjectChapter, 0, 0)
-	joins := gormx.DB.Table("t_subject").Select("t_subject.knowledge_tree_id, t_subject.subject_id, t_subject.subject_name, " +
-		"t_subject.package_id, user_order.type, user_order.user_id, user_order.expiration_time").
-		Joins("LEFT JOIN user_order ON user_order.subject_id = t_subject.subject_id")
+	joins := gormx.DB.Table("t_subject s").Select("s.knowledge_tree_id, s.subject_id, s.subject_name, " +
+		"s.package_id, uo.type, uo.user_id, uo.expiration_time").
+		Joins("LEFT JOIN user_order uo ON uo.subject_id = s.subject_id")
 	if types == 1 || types == 3 {
-		joins = joins.Where("user_order.user_id=? and is_valid=? and user_order.expiration_time > ?", userId, 1, time)
+		joins = joins.Where("uo.user_id=? and is_valid=? and uo.expiration_time > ?", userId, 1, time)
 	}
 	if types == 4 {
-		joins = joins.Where("t_subject.is_hot=?", 1)
+		joins = joins.Where("s.is_hot=?", 1)
 	}
-	err := joins.Order("t_subject.sort asc").Order("user_order.expiration_time desc").Scan(&subject).Error
+	joins = joins.Where("s.status=1")
+	err := joins.Order("s.sort asc").Order("uo.expiration_time desc").Scan(&subject).Error
 	if err != nil {
 		return subject, errors.Wrap(err, "查询课程表失败")
 	}
@@ -55,7 +56,7 @@ func (a *ApiSubject) AddTrySubject(order mysql_model.UserOrder) error {
 
 func (a *ApiSubject) GetSubjectDetail(subjectId int64) (*mysql_model.TSubject, error) {
 	subject := &mysql_model.TSubject{}
-	err := gormx.DB.Where("subject_id=?", subjectId).First(subject).Error
+	err := gormx.DB.Where("subject_id=? and status=1", subjectId).First(subject).Error
 	if err != nil {
 		return subject, errors.Wrap(err, "查询单个课程信息失败")
 	}
@@ -78,15 +79,17 @@ func (a *ApiSubject) GetSubjectByPieceId(pieceId int64) ([]mysql_model.SubjectBy
 	"INNER JOIN t_subject tsu ON tsu.subject_id = tc.subject_id " +
 	"INNER JOIN t_package tpa ON tpa.package_id = tsu.package_id WHERE tpi.id = " + util.Int2Str(int(pieceId))).Scan(&maps).Error
 	*/
-	err := gormx.DB.Debug().Table("t_piece").
-		Select("t_package.package_id,t_package.package_name,t_subject.subject_id,t_subject.subject_name,"+
-			"t_chapter.id chapter_id, t_chapter.`name` chapter_name,t_section.id section_id, t_section.`name` section_name,"+
-			"t_piece.id piece_id,t_piece.`name` piece_name").
-		Joins("INNER JOIN t_section ON t_section.id = t_piece.section_id").
-		Joins("INNER JOIN t_chapter ON t_chapter.id = t_section.chapter_id").
-		Joins("INNER JOIN t_subject ON t_subject.subject_id = t_chapter.subject_id").
-		Joins("INNER JOIN t_package ON t_package.package_id = t_subject.package_id").
-		Where("t_piece.id = ?", pieceId).Scan(&data).Error
+	err := gormx.DB.Debug().Table("t_piece pi").
+		Select("p.package_id,p.package_name,s.subject_id,s.subject_name,"+
+			"c.id chapter_id, c.`name` chapter_name,se.id section_id, se.`name` section_name,"+
+			"pi.id piece_id,pi.`name` piece_name").
+		Joins("INNER JOIN t_section se ON se.id = pi.section_id").
+		Joins("INNER JOIN t_chapter c ON c.id = se.chapter_id").
+		Joins("INNER JOIN t_subject s ON s.subject_id = c.subject_id").
+		Joins("INNER JOIN t_package p ON p.package_id = s.package_id").
+		Where("pi.id = ?", pieceId).
+		Where("pi.status=1 and se.status=1 and c.status=1 and s.status=1 and p.status=1").
+		Scan(&data).Error
 	if err != nil {
 		return data, errors.Wrap(err, "查询课程信息失败")
 	}
@@ -95,11 +98,13 @@ func (a *ApiSubject) GetSubjectByPieceId(pieceId int64) ([]mysql_model.SubjectBy
 
 func (a *ApiSubject) GetSubjectPiece(subjectId []int64) ([]mysql_model.SubjectByPieceId, error) {
 	subject := make([]mysql_model.SubjectByPieceId, 0, 0)
-	err := gormx.DB.Table("t_subject").Select("t_subject.subject_id, t_subject.subject_name, t_piece.id, t_piece.name, t_chapter.subject_id").
-		Joins("LEFT JOIN t_chapter ON t_subject.subject_id = t_chapter.subject_id").
-		Joins("LEFT JOIN t_section ON t_section.chapter_id = t_chapter.id").
-		Joins("LEFT JOIN t_piece ON t_piece.section_id = t_section.id").
-		Where("t_subject.subject_id in ?", subjectId).Scan(&subject).Error
+	err := gormx.DB.Table("t_subject s").Select("s.subject_id, s.subject_name, p.id, p.name, c.subject_id").
+		Joins("LEFT JOIN t_chapter c ON s.subject_id = c.subject_id").
+		Joins("LEFT JOIN t_section se ON se.chapter_id = c.id").
+		Joins("LEFT JOIN t_piece p ON p.section_id = se.id").
+		Where("s.subject_id in ?", subjectId).
+		Where("se.status=1 and c.status=1 and s.status=1 and p.status=1").
+		Scan(&subject).Error
 	if err != nil {
 		return subject, errors.Wrap(err, "查询课程下的节块信息失败")
 	}

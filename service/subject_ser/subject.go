@@ -72,9 +72,6 @@ func (a *ApiSubject) GetSubjectList(param req_model.GetSubjectList) ([]resp_mode
 	}
 
 	for _, v1 := range data {
-		/*if v1.UserOrder.UserId != 0 && param.UserId != v1.UserOrder.UserId {
-			continue
-		}*/
 		if _, ok := tempMap[v1.TSubject.SubjectId]; ok {
 			continue
 		}

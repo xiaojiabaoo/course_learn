@@ -16,11 +16,15 @@ func InitWebRouter(engine *gin.Engine) {
 	engine.Static("/integral", "./common/static/html/integral")
 	engine.Static("/topic", "./common/static/html/topic")
 	engine.Static("/user_html", "./common/static/html/user")
+	engine.Static("/manage_html", "./common/static/html/manage")
 	engine.LoadHTMLFiles(
 		"./common/static/html/main.html", "./common/static/html/login.html",
-		"./common/static/html/404.html", "./common/static/html/500.html")
+		"./common/static/html/404.html", "./common/static/html/500.html", "./common/static/html/manager_main.html")
 	engine.GET("/main", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "main.html", gin.H{})
+	})
+	engine.GET("/manager_main", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "manager_main.html", gin.H{})
 	})
 	engine.GET("/404", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "404.html", gin.H{})

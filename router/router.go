@@ -3,6 +3,7 @@ package router
 import (
 	"course_learn/controller/chapter"
 	"course_learn/controller/common"
+	"course_learn/controller/manage"
 	"course_learn/controller/question"
 	"course_learn/controller/subject"
 	"course_learn/controller/user"
@@ -79,6 +80,46 @@ func Run(addr string) {
 			set.POST("/lean/record", user.AddUserLeanRecord)
 			set.POST("/data", user.SetUserData)
 			set.POST("/change_password", user.ChangePassword)
+		}
+	}
+	manages := router.Group("/manage")
+	{
+		get := manages.Group("/get")
+		{
+			get.POST("/user/list", user.GetUserList)
+			get.POST("/list", manage.GetManageList)
+			get.POST("/package/list", manage.GetPackageList)
+			get.POST("/package/select/list", manage.GetPackageSelectList)
+			get.POST("/subject/list", manage.GetSubjectList)
+			get.POST("/subject/select/list", manage.GetSubjectSelectList)
+			get.POST("/chapter/list", manage.GetChapterList)
+			get.POST("/chapter/select/list", manage.GetChapterSelectList)
+			get.POST("/section/list", manage.GetSectionList)
+			get.POST("/section/select/list", manage.GetSectionSelectList)
+			get.POST("/piece/list", manage.GetPieceList)
+			get.POST("/piece/select/list", manage.GetPieceSelectList)
+			get.POST("/question/list", manage.GetQuestionList)
+			get.POST("/question/option/list", manage.GetQuestionOptionList)
+		}
+		set := manages.Group("/set")
+		{
+			set.POST("/edit/user/data", user.EditUserData)
+			set.POST("/edit/data", manage.EditManage)
+			set.POST("/package/edit", manage.EditPackage)
+			set.POST("/package/del", manage.DelPackage)
+			set.POST("/subject/edit", manage.EditSubject)
+			set.POST("/subject/del", manage.DelSubject)
+			set.POST("/chapter/edit", manage.EditChapter)
+			set.POST("/chapter/del", manage.DelChapter)
+			set.POST("/section/edit", manage.EditSection)
+			set.POST("/section/del", manage.DelSection)
+			set.POST("/piece/edit", manage.EditPiece)
+			set.POST("/piece/del", manage.DelPiece)
+			set.POST("/question/edit", manage.EditQuestion)
+			set.POST("/question/del", manage.DelQuestion)
+			set.POST("/question/option/edit", manage.EditQuestionOption)
+			set.POST("/question/option/del", manage.DelQuestionOption)
+
 		}
 	}
 	InitWebRouter(router)

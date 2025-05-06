@@ -5,6 +5,7 @@ import (
 	"course_learn/model/resp_model"
 	"course_learn/service/common_ser"
 	"course_learn/service/subject_ser"
+	"course_learn/tools"
 	custErr "course_learn/tools/error"
 	"course_learn/tools/response"
 	"github.com/gin-gonic/gin"
@@ -24,12 +25,20 @@ func GetSubjectList(c *gin.Context) {
 		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
 		return
 	}
-	info, err = apiCommon.GetUserInfo(c)
-	if err != nil {
-		response.ResponseData(c, err, nil)
-		return
+	if param.Action == tools.USER_LOGIN || len(param.Action) == 0 {
+		info, err = apiCommon.GetUserInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
+		param.UserId = info
+	} else if param.Action == tools.MANAGER_LOGIN {
+		_, err = apiCommon.GetManageInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
 	}
-	param.UserId = info
 	data, err = apiSubject.GetSubjectList(param)
 	if err != nil {
 		response.ResponseData(c, err, nil)

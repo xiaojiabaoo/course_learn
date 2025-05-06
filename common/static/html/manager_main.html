@@ -46,13 +46,13 @@
                 <!--<li class="layui-nav-item layui-show-xs-inline-block" lay-header-event="menuLeft">-->
                 <i id="spread-left" class="layui-icon layui-icon-spread-left"></i>
             </li>
-            <li id="top_1" class="layui-nav-item layui-this"><a href="javascript:void(0);" onclick="topMenu(1)">计算机信息管理</a>
+            <!--<li id="top_1" class="layui-nav-item layui-this"><a href="javascript:void(0);" onclick="topMenu(1)">课程管理</a>
             </li>
-            <li id="top_2" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(2)">课程</a></li>
-            <li id="top_3" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(3)">我的积分</a></li>
-            <li id="top_4" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(4)">最新活动<span
-                    class="layui-badge-dot"></span></a></li>
-            <li id="top_5" class="layui-nav-item"><a href="javascript:void(0);">主题</a>
+            <li id="top_2" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(2)">题库管理</a></li>
+            <li id="top_3" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(3)">用户管理</a></li>
+            <li id="top_4" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(4)">管理员信息</a></li>
+            <li id="top_5" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu(4)">论坛管理</a></li>-->
+            <li id="top_6" class="layui-nav-item"><a href="javascript:void(0);">主题</a>
                 <dl class="layui-nav-child">
                     <dd><a href="javascript:void(0);" onclick="mainTheme('ahei')">暗黑</a></dd>
                     <dd><a href="javascript:void(0);" onclick="mainTheme('cyan')">藏青</a></dd>
@@ -60,17 +60,7 @@
                     <dd><a href="javascript:void(0);" onclick="mainTheme('blue')">艳蓝</a></dd>
                 </dl>
             </li>
-            <li id="top_7" class="layui-nav-item"><a href="javascript:void(0);" onclick="topMenu('7')">关于我们</a></li>
-            <li id="top_8" class="layui-nav-item"><a href="javascript:void(0);">
-
-            </a></li>
         </ul>
-
-        <div class="layui-form layui-hide-xs component">
-            <input type="text" autocomplete="off" class="layui-input">
-            <i class="layui-icon layui-icon-search"></i>
-        </div>
-
         <!-- 头部菜单结束 -->
         <ul class="layui-nav layui-layout-right">
             <li class="layui-nav-item layui-hide layui-show-md-inline-block">
@@ -81,27 +71,44 @@
                     <span id="user_name">tester</span>
                 </a>
                 <dl class="layui-nav-child">
-                    <dd><a href="">个人信息</a></dd>
-                    <dd><a href="">设置</a></dd>
                     <dd><a href="">退出登录</a></dd>
                 </dl>
-            </li>
-            <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
-                <a href="javascript:;">
-                    <i class="layui-icon layui-icon-more-vertical"></i>
-                </a>
             </li>
         </ul>
     </div>
     <!-- 左边菜单开始 -->
     <div class="layui-side layui-bg-black">
         <div class="layui-side-scroll">
-            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+            <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo">
                 <li class="layui-nav-item layui-nav-itemed">
-                    <a class="" href="javascript:;"><i class="layui-icon layui-icon-template-1"></i> 我的课程</a>
-                    <dl id="nav-child" class="layui-nav-child"></dl>
+                    <a href="javascript:;">课程管理</a>
+                    <dl class="layui-nav-child">
+                        <dd class="layui-this"><a href="javascript:void(0);" onclick="leftMenu(1)">专业(Package)</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(2)">课程(Subject)</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(3)">章(Chapter)</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(4)">节(Section)</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(5)">块(Piece)</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(6)">题目(Question)</a></dd>
+                    </dl>
                 </li>
+                <!--<li class="layui-nav-item">
+                    <a href="javascript:;">论坛管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(7)">移动模块</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(8)">后台模版</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(9)">电商平台</a></dd>
+                    </dl>
+                </li>-->
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(10)">用户列表</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(11)">学习记录</a></dd>
+                        <dd><a href="javascript:void(0);" onclick="leftMenu(12)">登录记录</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="leftMenu(13)">订单管理</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="leftMenu(14)">管理员信息</a></li>
             </ul>
         </div>
     </div>
@@ -124,30 +131,10 @@
 <script src="/static/js/config.js" charset="utf-8"></script>
 <script>
     //JavaScript代码区域
-    layui.use(['layer', 'element', 'form', 'util'], function () {
+    layui.use(['layer', 'element', 'form'], function () {
         let element = layui.element;
         let form = layui.form;
         let layer = layui.layer;
-        let util = layui.util;
-
-        //头部事件
-        util.event('lay-header-event', {
-            //左侧菜单事件
-            menuLeft: function (othis) {
-                layer.msg('展开左侧菜单的操作', {icon: 0});
-            },
-            menuRight: function () {
-                layer.open({
-                    type: 1,
-                    title: "系统消息",
-                    content: '<div style="padding: 15px;">xiaoben内部学习系统已上线</div>',
-                    area: ['260px', '100%'],
-                    offset: 'rt', //右上角
-                    anim: 2,
-                    shadeClose: true,
-                });
-            }
-        });
 
         //获取主题信息
         window.initTheme = function () {
@@ -173,30 +160,6 @@
             $("#user_name").text(name)
         }
         initUser()
-
-        /*//初始化左侧菜单
-        window.initLeftMenu = function () {
-            let params = '{}'
-            let data = sendApi(url_get_sub_list, params, "POST")
-            if (data.code == 0) {
-                let result = data.data;
-                let str = ''
-                for (let i = 0; i < result.length; i++) {
-                    let index = i + 1
-                    if (i == 0) {
-                        str += '<dd class="layui-this" id="left_' + index + '"><a href="javascript:void(0);" onclick="leftMenu(' + index + ')">' + result[i].subject_name + '</a></dd>'
-                    } else {
-                        str += '<dd id="left_' + index + '"><a href="javascript:void(0);" onclick="leftMenu(' + index + ')">' + result[i].subject_name + '</a></dd>'
-                    }
-                }
-                $("#nav-child").html(str)
-                element.render()
-            }
-        }
-        initLeftMenu()*/
-
-        window.leftMenu = function (sort) {
-        }
 
         window.mainTheme = function (type) {
             //删除原有的主题
@@ -227,13 +190,45 @@
                     break
             }
         }
-        window.topMenu = function (sort) {
+
+        window.leftMenu = function (sort) {
             switch (sort) {
-                case 2:
-                    document.getElementById("iframe").src = '/all_subject/list.html'
+                case 1 :
+                    document.getElementById("iframe").src = '/manage_html/package_list.html'
+                    break
+                case 2 :
+                    document.getElementById("iframe").src = '/manage_html/subject_list.html'
+                    break
+                case 3 :
+                    document.getElementById("iframe").src = '/manage_html/chapter_list.html'
+                    break
+                case 4 :
+                    document.getElementById("iframe").src = '/manage_html/section_list.html'
+                    break
+                case 5 :
+                    document.getElementById("iframe").src = '/manage_html/piece_list.html'
+                    break
+                case 6 :
+                    document.getElementById("iframe").src = '/manage_html/question_list.html'
+                    break
+                case 10:
+                    document.getElementById("iframe").src = '/manage_html/user_list.html'
+                    break
+                case 11:
+                    document.getElementById("iframe").src = '/manage_html/user_learn_record.html'
+                    break
+                case 12:
+                    document.getElementById("iframe").src = '/manage_html/user_login_history.html'
+                    break
+                case 13:
+                    document.getElementById("iframe").src = '/manage_html/user_order_list.html'
+                    break
+                case 14:
+                    document.getElementById("iframe").src = '/manage_html/manage_list.html'
                     break
             }
         }
+        leftMenu(1)
     });
 </script>
 </body>

@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>学习平台</title>
+  <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+  <link rel="stylesheet" href="/static/css/config.css">
+</head>
+<body>
+<div id="add-main" style="display: none;">
+  <form class="layui-form" id="add-form" action="">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+      <legend style="font-size: 12px;">选择题目所在位置</legend>
+    </fieldset>
+    <div class="layui-form-item" style="display: none;">
+      <label class="layui-form-label">题目ID</label>
+      <div class="layui-input-inline">
+        <input type="text" readonly value="" id="open_question_id" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_update_1" style="display: none;">
+      <div class="layui-inline">
+        <label class="layui-form-label">所属专业</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_package_id" style="background-color: #eee" readonly value="" class="layui-input open_package_id">
+        </div>
+        <label class="layui-form-label">所属课程</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_subject_id" style="background-color: #eee" readonly value="" class="layui-input open_subject_id">
+        </div>
+        <label class="layui-form-label">所属学习章</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_chapter_id" style="background-color: #eee" readonly value="" class="layui-input open_chapter_id">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_update_2" style="display: none;">
+      <div class="layui-inline">
+        <label class="layui-form-label">所属学习节</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_section_id" style="background-color: #eee" readonly value="" class="layui-input open_section_id">
+        </div>
+        <label class="layui-form-label">所属学习块</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_piece_name" style="background-color: #eee" value="" readonly value="" class="layui-input open_piece_name">
+          <input type="text" name="open_piece_id" style="display: none;" value="" value="" class="layui-input open_piece_id">
+        </div>
+      </div>
+    </div>
+
+    <div class="layui-form-item" id="open_add_1">
+      <div class="layui-inline">
+        <label class="layui-form-label">所属专业</label>
+        <div class="layui-input-inline">
+          <select name="open_package_id" id="open_package_id" class="open_package_id" lay-search="open_package_id" lay-filter="open_package_id">
+          </select>
+        </div>
+        <label class="layui-form-label">所属课程</label>
+        <div class="layui-input-inline">
+          <select name="open_subject_id" id="open_subject_id" class="open_subject_id" lay-search="open_subject_id" lay-filter="open_subject_id">
+          </select>
+        </div>
+        <label class="layui-form-label">所属学习章</label>
+        <div class="layui-input-inline">
+          <select name="open_chapter_id" id="open_chapter_id" lay-search="open_chapter_id" lay-filter="open_chapter_id">
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_add_2">
+      <div class="layui-inline">
+        <label class="layui-form-label">所属学习节</label>
+        <div class="layui-input-inline">
+          <select name="open_section_id" id="open_section_id" lay-search="open_section_id" lay-filter="open_section_id">
+          </select>
+        </div>
+        <label class="layui-form-label">所属学习块</label>
+        <div class="layui-input-inline">
+          <select name="open_piece_id" id="open_piece_id" lay-search="open_piece_id" lay-filter="open_piece_id">
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+      <legend style="font-size: 12px;">填写题目信息</legend>
+    </fieldset>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">题目内容</label>
+      <div class="layui-input-inline" style="width: 810px !important;">
+        <textarea name="open_question_content" id="open_question_content" class="layui-textarea"></textarea>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">答案解析</label>
+      <div class="layui-input-inline" style="width: 810px !important;">
+        <textarea name="open_question_analysis" id="open_question_analysis" class="layui-textarea"></textarea>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">题目顺序</label>
+        <div class="layui-input-inline">
+          <input type="number" name="open_question_sequence" id="open_question_sequence" value="" class="layui-input open_question_sequence">
+        </div>
+        <label class="layui-form-label">题目答案</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_question_answer" id="open_question_answer" value="" class="layui-input open_question_answer">
+        </div>
+        <label class="layui-form-label">题目分数</label>
+        <div class="layui-input-inline">
+          <input type="text" name="open_question_score" id="open_question_score" value="" class="layui-input open_question_score">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">题目类型</label>
+        <div class="layui-input-inline">
+          <select name="open_question_type" id="open_question_type" lay-search="open_question_type" lay-filter="open_question_type">
+            <option value="SINGLE_CHOICE">单选题</option>
+            <option value="ORDER_FILL_BLANK">填空题</option>
+            <option value="ESSAY">简答题</option>
+            <option value="MULTI_CHOICE">多选题</option>
+            <option value="JUDGE_CHOICE">判断题</option>
+            <option value="DISORDER_FILL_BLANK">练习题</option>
+            <option value="MANY_TO_MANY">情景选择题</option>
+            <!--<option value="COMPREHENSIVE">综合题</option>-->
+          </select>
+        </div>
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-inline">
+          <select name="open_question_status" id="open_question_status" lay-search="open_question_status" lay-filter="open_question_status">
+            <option value="2">下架</option>
+            <option value="1">上架</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div id="option_iframe">
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend style="font-size: 12px;">题目选项信息(以下信息为实时更新，操作不受“保存”按钮影响)</legend>
+      </fieldset>
+
+      <iframe width="100%" id="iframe" height="350px" src="/manage_html/question_option_list.html" frameborder="0" border="0" marginwidth="0"
+            marginheight="0" scrolling="yes" allowtransparency="yes"></iframe>
+    </div>
+    <button class="layui-btn" id="open_btn" lay-submit lay-filter="open_btn" style="margin-left: 35px;margin-top: 35px;margin-bottom: 20px;">保存</button>
+  </form>
+</div>
+<form class="layui-form" action="">
+  <div style="height: 15px;"></div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">所属专业</label>
+    <div class="layui-input-inline">
+      <select name="package_id" id="package_id" lay-search="package_id" lay-filter="package_id">
+      </select>
+    </div>
+    <label class="layui-form-label">所属课程</label>
+    <div class="layui-input-inline">
+      <select name="subject_id" id="subject_id" lay-search="subject_id" lay-filter="subject_id">
+      </select>
+    </div>
+    <label class="layui-form-label">所属学习章</label>
+    <div class="layui-input-inline">
+      <select name="chapter_id" id="chapter_id" lay-search="chapter_id" lay-filter="chapter_id">
+        <option value="0">请选择</option>
+      </select>
+    </div>
+    <button type="button" lay-submit lay-filter="reset" class="layui-btn">重置</button>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">所属学习节</label>
+    <div class="layui-input-inline">
+      <select name="chapter_id" id="section_id" lay-search="section_id" lay-filter="section_id">
+        <option value="0">请选择</option>
+      </select>
+    </div>
+    <label class="layui-form-label">所属学习块</label>
+    <div class="layui-input-inline">
+      <select name="piece_id" id="piece_id" lay-search="piece_id" lay-filter="piece_id">
+        <option value="0">请选择</option>
+      </select>
+    </div>
+    <label class="layui-form-label">题目内容</label>
+    <div class="layui-input-inline">
+      <input type="text" name="question_name" id="question_name" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">状态</label>
+    <div class="layui-input-block">
+      <input type="radio" name="question_status" value="0" lay-filter="question_status" lay-skin="primary" title="不选" checked>
+      <input type="radio" name="question_status" value="1" lay-filter="question_status" lay-skin="primary" title="上架">
+      <input type="radio" name="question_status" value="2" lay-filter="question_status" lay-skin="primary" title="下架">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">题目类型</label>
+    <div class="layui-input-block">
+      <input type="checkbox" name="question_type" value="SINGLE_CHOICE" lay-filter="question_type" lay-skin="primary" title="单选题">
+      <input type="checkbox" name="question_type" value="ORDER_FILL_BLANK" lay-filter="question_type" lay-skin="primary" title="填空题">
+      <input type="checkbox" name="question_type" value="ESSAY" lay-filter="question_type" lay-skin="primary" title="简答题">
+      <input type="checkbox" name="question_type" value="MULTI_CHOICE" lay-filter="question_type" lay-skin="primary" title="多选题">
+      <input type="checkbox" name="question_type" value="JUDGE_CHOICE" lay-filter="question_type" lay-skin="primary" title="判断题">
+      <input type="checkbox" name="question_type" value="DISORDER_FILL_BLANK" lay-filter="question_type" lay-skin="primary" title="练习题">
+      <input type="checkbox" name="question_type" value="MANY_TO_MANY" lay-filter="question_type" lay-skin="primary" title="情景选择题">
+      <input type="checkbox" name="question_type" value="COMPREHENSIVE" lay-filter="question_type" lay-skin="primary" title="综合题">
+    </div>
+  </div>
+</form>
+<div style="width: 96%;margin-left: 2%;">
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <div style="float: right;">
+        <button type="button" class="layui-btn" lay-submit lay-filter="add_question" id="add_question">添加题目</button>
+      </div>
+    </div>
+  </form>
+  <table class="layui-hide" id="questionlist" lay-filter="questionlist"></table>
+</div>
+<ul class="layui-fixbar" style="bottom: 75px;"><li class="layui-icon layui-fixbar-top" lay-type="top" style="display: none;"></li></ul>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs" lay-event="edits">编辑</a>
+  <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+</script>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+
+<script>
+  layui.use(['table', 'dropdown'], function(){
+    let table = layui.table;
+    let dropdown = layui.dropdown;
+    let form = layui.form;
+    let manage_token = localStorage.getItem("manage_token");
+    let tableData = table.render({
+      elem: '#questionlist',
+      url:url_get_question_list,
+      method: 'POST',
+      headers: {"token": manage_token},
+      request: {
+        pageName: 'page', //页码的参数名称，默认：page
+        limitName: 'size' //每页数据量的参数名，默认：limit
+      },
+      cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+      cols: [[
+        {field:'id', title: 'ID', minWidth: 120},
+        {field:'package_name', title: '专业名称', minWidth: 200},
+        {field:'subject_name', title: '课程名称', minWidth: 200},
+        {field:'chapter_name', title: '学习章名称', minWidth: 200},
+        {field:'section_name', title: '学习节名称', minWidth: 200},
+        {field:'piece_name', title: '学习块名称', minWidth: 200},
+        {field:'question_content', title: '题目内容', minWidth: 300},
+        {field:'question_type', title: '题目类型', minWidth: 100,align: "center",
+          templet: function (e) {
+            switch (e.question_type) {
+              case "SINGLE_CHOICE":
+                return "单选题"
+              case "ORDER_FILL_BLANK":
+                return "填空题"
+              case "ESSAY":
+                return "简答题"
+              case "MULTI_CHOICE":
+                return "多选题"
+              case "JUDGE_CHOICE":
+                return "判断题"
+              case "DISORDER_FILL_BLANK":
+                return "练习题"
+              case "MANY_TO_MANY":
+                return "情景选择题"
+              case "COMPREHENSIVE":
+                return "综合题"
+              default:
+                return "--"
+            }
+          }
+        },
+        {field:'sequence', title: '题目顺序', minWidth: 120},
+        {field:'question_answer', title: '题目答案', minWidth: 120},
+        {field:'score', title: '题目分数', minWidth: 90, align: "center"},
+        {field:'main_node_frequency', title: '出题概率', minWidth: 100, align: "center"},
+        /*{field:'analysis_type', title: '解析类型', minWidth: 100, align: "center"},*/
+        {field:'analysis', title: '解析描述', minWidth: 120},
+        {field:'add_time', title: '添加时间',minWidth: 160,
+          templet: function (e) {
+            return formatDateCommon(e.add_time*1000, "yyyy-MM-dd hh:mm:ss")
+          }
+        },
+        {field:'update_time', title: '修改时间',minWidth: 160,
+          templet: function (e) {
+            return formatDateCommon(e.update_time*1000, "yyyy-MM-dd hh:mm:ss")
+          }
+        },
+        {field:'status', title: '状态',width: 100, align: "center",fixed: 'right',
+          templet: function (e) {
+            switch (e.status) {
+              case 1:
+                return "<span style='color: green'>上架</span>"
+              case 2:
+                return "<span style='color: red'>下架</span>"
+              default:
+                return "--"
+            }
+          }
+        },
+        {field:'right', title: '操作', minWidth: 140, align: 'center',fixed: 'right',toolbar: '#barDemo'}
+      ]],
+      page: true,
+      limit: 20,
+      limits: [20, 30, 40, 50],
+      parseData: function(res) { // res 即为原始返回的数据
+        return {
+          "code": res.code, // 返回码，一般为0表示成功
+          "msg": res.msg, // 提示信息
+          "count": res.data.count, // 数据总数，如果有的话
+          "data": res.data.list // 解析后的数据列表
+        };
+      },
+      done: function (res, curr, count) {
+        jump_login(res)
+      }
+    });
+    form.render();
+
+    form.on('select(package_id)', function (data) {
+      init_subject_select(data.value,"")
+      $("#chapter_id").val("")
+      $("#chapter_id").html("")
+      $("#section_id").val("")
+      $("#section_id").html("")
+      $("#piece_id").val("")
+      $("#piece_id").html("")
+      search()
+    });
+
+    form.on('select(open_package_id)', function (data) {
+      init_subject_select(data.value,"open")
+      $("#open_chapter_id").val("")
+      $("#open_chapter_id").html("")
+      $("#open_section_id").val("")
+      $("#open_section_id").html("")
+      $("#open_piece_id").val("")
+      $("#open_piece_id").html("")
+      form.render();
+    });
+
+    form.on('select(subject_id)', function (data) {
+      init_chapter_select(data.value,"")
+      $("#section_id").val("")
+      $("#section_id").html("")
+      $("#piece_id").val("")
+      $("#piece_id").html("")
+      search()
+    });
+
+    form.on('select(open_subject_id)', function (data) {
+      init_chapter_select(data.value,"open")
+      $("#open_section_id").val("")
+      $("#open_section_id").html("")
+      $("#open_piece_id").val("")
+      $("#open_piece_id").html("")
+      form.render();
+    });
+
+    form.on('select(chapter_id)', function (data) {
+      init_section_select(data.value,"")
+      $("#piece_id").val("")
+      $("#piece_id").html("")
+      search()
+    });
+
+    form.on('select(open_chapter_id)', function (data) {
+      init_section_select(data.value,"open")
+      $("#open_piece_id").val("")
+      $("#open_piece_id").html("")
+      form.render();
+    });
+
+    form.on('select(section_id)', function (data) {
+      init_piece_select(data.value,"")
+      search()
+    });
+
+    form.on('select(open_section_id)', function (data) {
+      init_piece_select(data.value,"open")
+    });
+
+    form.on('select(piece_id)', function (data) {
+      search()
+    });
+
+    form.on('select(open_question_type)', function (data) {
+      if (data.value == "SINGLE_CHOICE" || data.value=="MULTI_CHOICE" ||
+              data.value=="JUDGE_CHOICE" || data.value=="MANY_TO_MANY") {
+        $("#option_iframe").show()
+      } else if (data.value == "ORDER_FILL_BLANK" || data.value=="ESSAY" ||
+              data.value=="DISORDER_FILL_BLANK") {
+        $("#option_iframe").hide()
+      } else if (data.value=="COMPREHENSIVE") {
+        $("#option_iframe").hide()
+      }
+      form.render();
+    });
+
+    let questionStatus = '';
+    form.on('radio(question_status)', function (data) {
+      questionStatus = ''
+      $("input:radio[name='question_status']:checked").each(function () {
+        questionStatus = $(this).val()
+      });
+      search()
+    });
+
+    let questionType = ''
+    form.on('checkbox(question_type)', function (data) {
+      questionType = ''
+      $("input:checkbox[name='question_type']:checked").each(function () {
+        questionType += $(this).val()+',';
+      });
+      search()
+    });
+
+    $("#question_content").on("input",function(e){
+      search()
+    });
+
+    window.search = function () {
+      //let question_status = $("#question_status").val();
+      let piece_id = $("#piece_id").val();
+      let section_id = $("#section_id").val();
+      let chapter_id = $("#chapter_id").val();
+      let subject_id = $("#subject_id").val();
+      let package_id = $("#package_id").val();
+      //let question_type = $("#question_type").val();
+      let question_content = $("#question_content").val();
+      tableData.reload({
+        where: {
+          question_type: questionType,
+          question_content: question_content,
+          status: questionStatus,
+          piece_id: piece_id,
+          section_id: section_id,
+          chapter_id: chapter_id,
+          subject_id: subject_id,
+          package_id: package_id
+        },
+        page: {
+          curr: 1
+        }
+      });
+      form.render();
+    }
+
+    form.on('submit(reset)', function (data) {
+      $("#piece_id").val("");
+      $("#piece_id").html("");
+      $("#section_id").val("");
+      $("#section_id").html("");
+      $("#chapter_id").val("");
+      $("#chapter_id").html("");
+      $("#subject_id").val("");
+      $("#subject_id").html("");
+      $("#package_id").val("");
+      $("#question_name").val("");
+      $('input[name=question_type]').prop('checked', false);
+      $('input[name=question_status][value="0"]').prop('checked', true);
+      questionType = ''
+      questionStatus = ''
+      search()
+      form.render();
+    });
+
+    let open_update
+    table.on('tool(questionlist)', function (obj) {
+      let data = obj.data //获得当前行数据
+      let layEvent = obj.event; //获得 lay-event 对应的值
+       switch (layEvent) {
+         case 'edits':
+           open_update = layer.open({
+             type: 1,
+             title: "更新题目信息",
+             shift: 3,
+             area: ['90%', '80%'],
+             content: $("#add-main"),
+             success: function (layero, index) {
+               $(".open_package_id").val(data.package_name)
+               $(".open_subject_id").val(data.subject_name)
+               $(".open_chapter_id").val(data.chapter_name)
+               $(".open_section_id").val(data.section_name)
+               $(".open_piece_name").val(data.piece_name)
+               $(".open_piece_id").val(data.piece_id)
+               $("#open_question_id").val(data.id)
+               $("#open_question_content").val(data.question_content)
+               $("#open_question_analysis").val(data.analysis)
+               $("#open_question_sequence").val(data.sequence)
+               $("#open_question_answer").val(data.question_answer)
+               $("#open_question_score").val(data.score)
+               $("#open_question_type").val(data.question_type)
+               $("#open_question_status").val(data.status)
+               $("#open_add_1").hide()
+               $("#open_update_1").show()
+               $("#open_add_2").hide()
+               $("#open_update_2").show()
+               document.getElementById("iframe").src = '/manage_html/question_option_list.html?question_id='+data.id
+               form.render();
+             },
+             yes: function () {
+
+             },
+             end: function (res) {
+               $("#add-main").css("display",'none');
+             }
+           });
+           break
+         case 'more':
+           let dropdown_data = [{title: '子题目', id: 'question_child'}, {title: '选项', id: 'question_option'}, {title: '删除', id: 'question_del'}]
+           if (data.child.length == 0 && data.option.length == 0) {
+             dropdown_data = [{title: '删除', id: 'question_del'}]
+           } else if (data.option.length == 0) {
+             dropdown_data = [{title: '子题目', id: 'question_child'}, {title: '删除', id: 'question_del'}]
+           } else if (data.child.length == 0) {
+             dropdown_data = [{title: '选项', id: 'question_option'}, {title: '删除', id: 'question_del'}]
+           }
+            //下拉菜单
+           dropdown.render({
+             elem: this, //触发事件的 DOM 对象
+             show: true, //外部事件触发即显示
+             data: dropdown_data,
+             align: 'right', //右对齐弹出（v2.6.8 新增）
+             style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);',
+             click: function (menudata) {
+               if (menudata.id == "question_child") {
+                 let table_str = '<div class="layui-form">' +
+                         '<table class="layui-table">' +
+                         '<thead>' +
+                         '<tr>' +
+                         '<th>ID</th>' +
+                         '<th>题目内容</th>' +
+                         '<th>题目顺序</th>' +
+                         '<th>题目答案</th>' +
+                         '<th>题目分数</th>' +
+                         '<th>解析描述</th>' +
+                         '<th>选项(红色为正确答案)</th>' +
+                         '</tr>' +
+                         '</thead><tbody>'
+                 let childs = data.child
+                 for (let i = 0; i < childs.length; i++) {
+                   let options = childs[i].option
+                   let option_str = ''
+                   for (let x = 0; x < options.length; x++) {
+                     if (options[x].correct == 1) {
+                       option_str += '<p><div style="color: red">'+options[x].title+'.&nbsp;'+options[x].content+'</div></p>'
+                     } else {
+                       option_str += '<p><div>'+options[x].title+'.&nbsp;'+options[x].content+'</div></p>'
+                     }
+                   }
+                   table_str += '<tr>' +
+                           '<td>'+childs[i].id+'</td>' +
+                           '<td>'+childs[i].question_content+'</td>' +
+                           '<td width="60px">'+childs[i].sequence+'</td>' +
+                           '<td width="60px">'+childs[i].question_answer+'</td>' +
+                           '<td width="60px">'+childs[i].score+'</td>' +
+                           '<td>'+childs[i].analysis+'</td>' +
+                           '<td minWidth="120px">'+option_str+'</td>' +
+                           '</tr>'
+                 }
+                 table_str += '</tbody></table>'
+                 layer.open({
+                   type: 1,
+                   title: "子题目信息",
+                   shift: 3,
+                   shadeClose: true,
+                   area: ['80%', '80%'],
+                   content: table_str,
+                   success: function (layero, index) {
+
+                     form.render();
+                   },
+                   yes: function () {
+
+                   },
+                   end: function (res) {
+                     $("#add-main").css("display",'none');
+                   }
+                 });
+               } else if (menudata.id == "question_option") {
+                 let table_str = '<div class="layui-form">' +
+                         '<table class="layui-table">' +
+                         '<thead>' +
+                         '<tr>' +
+                         '<th width="100px">ID</th>' +
+                         '<th width="60px">选项</th>' +
+                         '<th>选项内容</th>' +
+                         '<th width="120px">是否是正确答案</th>' +
+                         '</tr>' +
+                         '</thead><tbody>'
+                 let options = data.option
+                 for (let i = 0; i < options.length; i++) {
+                   let correct ='否'
+                   if (options[i].correct == 1) {
+                     correct = '<span style="color: red">是</span>'
+                   }
+                   table_str += '<tr>' +
+                           '<td>'+options[i].id+'</td>' +
+                           '<td>'+options[i].title+'</td>' +
+                           '<td>'+options[i].content+'</td>' +
+                           '<td>'+correct+'</td>' +
+                           '</tr>'
+                 }
+                 table_str += '</tbody></table>'
+                 layer.open({
+                   type: 1,
+                   title: "选项信息",
+                   shift: 3,
+                   shadeClose: true,
+                   area: ['60%', '60%'],
+                   content: table_str,
+                   success: function (layero, index) {
+
+                     form.render();
+                   },
+                   yes: function () {
+
+                   },
+                   end: function (res) {
+                     $("#add-main").css("display",'none');
+                   }
+                 });
+               } else if (menudata.id == "question_del") {
+                 layer.confirm("确定要删除吗？", {
+                   btn: ['确定', '取消'],
+                   cancel: function (index, layero) {
+                   }
+                 }, function () {
+                   let params = '{"id":'+data.id+',"piece_id":'+data.piece_id+'}'
+                   let result = sendApi(url_set_question_del, params, "POST", manage_token)
+                   if (result.code == 0) {
+                     layer.msg("删除成功", {icon: 1}, function (index) {
+                       search()
+                     });
+                   } else {
+                     layer.msg(result.msg, {icon: 2,anim: 6});
+                   }
+                 }, function () {
+                   form.render();
+                   layer.close();
+                 });
+               }
+             }
+           })
+           break
+       }
+    });
+
+    let add_question
+    form.on('submit(add_question)', function (data) {
+      add_question = layer.open({
+        type: 1,
+        title: "添加题目",
+        shift: 3,
+        area: ['90%', '80%'],
+        content: $("#add-main"),
+        success: function (layero, index) {
+          $("#open_question_id").val("")
+          $("#open_piece_id").val("")
+          $("#open_question_content").val("")
+          $("#open_question_analysis").val("")
+          $("#open_question_sequence").val("")
+          $("#open_question_answer").val("")
+          $("#open_question_score").val("")
+          $("#open_question_type").val("")
+          $("#open_question_status").val("2")
+          $("#open_add_1").show()
+          $("#open_update_1").hide()
+          $("#open_add_2").show()
+          $("#open_update_2").hide()
+          form.render();
+        },
+        yes: function () {
+
+        },
+        end: function (res) {
+          $("#add-main").css("display",'none');
+        }
+      });
+    });
+
+    $("#open_btn").click(function(){
+      let open_question_id = $("#open_question_id").val()
+      let open_piece_id = $("#open_piece_id").val()
+      let open_question_content = $("#open_question_content").val()
+      let open_question_analysis = $("#open_question_analysis").val()
+      let open_question_sequence = $("#open_question_sequence").val()
+      let open_question_answer = $("#open_question_answer").val()
+      let open_question_score = $("#open_question_score").val()
+      let open_question_type = $("#open_question_type").val()
+      let open_question_status = $("#open_question_status").val()
+      if (open_question_id == undefined || open_question_id == '') {
+        open_question_id = 0
+      }
+      if (open_piece_id == undefined || open_piece_id == '') {
+        open_piece_id = $(".open_piece_id").val()
+        if (open_piece_id == undefined || open_piece_id == '') {
+          open_piece_id = 0
+        }
+      }
+      if (open_question_sequence == undefined || open_question_sequence == '') {
+        open_question_sequence = 0
+      }
+      if (open_question_status == undefined || open_question_status == '') {
+        open_question_status = 2
+      }
+      let params = '{"id":'+open_question_id+',"piece_id":'+open_piece_id+',' +
+              '"sequence":'+open_question_sequence+',"question_type":"'+open_question_type+'",' +
+              '"question_content":"'+open_question_content+'","question_answer":"'+open_question_answer+'",' +
+              '"score":"'+open_question_score+'","analysis":"'+open_question_analysis+'",' +
+              '"status":'+open_question_status+'}'
+      let result = sendApi(url_set_question_edit, params, "POST", manage_token)
+      if (result.code == 0) {
+        layer.msg("保存成功", {icon: 1}, function (index) {
+          layer.close(open_update)
+          layer.close(add_question)
+          search()
+        });
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+      return false
+      return false
+    });
+
+    window.init_piece_select = function (section_id,action) {
+      let params = '{"section_id":'+section_id+'}'
+      let result = sendApi(url_get_piece_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+        }
+        if (action == "") {
+          $("#piece_id").html("")
+          $("#piece_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_piece_id").html("")
+          $("#open_piece_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_section_select = function (chapter_id,action) {
+      let params = '{"chapter_id":'+chapter_id+'}'
+      let result = sendApi(url_get_section_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+        }
+        if (action == "") {
+          $("#section_id").html("")
+          $("#section_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_section_id").html("")
+          $("#open_section_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_chapter_select = function (subject_id,action) {
+      let params = '{"subject_id":'+subject_id+'}'
+      let result = sendApi(url_get_chapter_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+        }
+        if (action == "") {
+          $("#chapter_id").html("")
+          $("#chapter_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_chapter_id").html("")
+          $("#open_chapter_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_subject_select = function (package_id,action) {
+      let params = '{"package_id":'+package_id+'}'
+      let result = sendApi(url_get_subject_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].subject_id+'">'+data[i].subject_name+'</option>'
+        }
+        if (action == "") {
+          $("#subject_id").html("")
+          $("#subject_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_subject_id").html("")
+          $("#open_subject_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_package_select = function () {
+      let params = '{}'
+      let result = sendApi(url_get_package_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].package_id+'">'+data[i].package_name+'</option>'
+        }
+        $("#package_id").html('<option value="0">请选择</option>'+str)
+        $("#open_package_id").html("")
+        $("#open_package_id").html(str)
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+    init_package_select()
+  });
+</script>
+
+</body>
+</html>

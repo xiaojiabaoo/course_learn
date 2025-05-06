@@ -7,11 +7,17 @@ type Verification struct {
 }
 
 type Login struct {
-	LoginWay     int64  `json:"login_way" validate:"required"`  //用户登录方式：1.手机号码登录；2.邮箱地址登录
+	LoginWay     int64  `json:"login_way" validate:"required"`  //用户登录方式：1.手机号码登录；2.邮箱地址登录；3.管理员登录
 	LoginType    int64  `json:"login_type" validate:"required"` //用户登录类型：1.验证码登录；2.密码登录
 	Account      string `json:"account" validate:"required"`    //用户注册手机号码/邮箱地址
 	SecurityCode int64  `json:"security_code"`                  //验证码
 	Password     string `json:"password"`                       //密码
+	Identifier   string `json:"identifier"`                     //识别码：管理员登录时需要
 	AreaCode     string `json:"area_code"`                      //用户手机区号，非手机注册时该字段无效
 	IP           string `json:"ip"`                             //用户注册IP地址
+}
+
+type Upload struct {
+	Id       int64  `form:"img_id"`
+	FileType string `form:"file_type"`
 }

@@ -1,7 +1,6 @@
 /*=========================================公共变量信息-开始=========================================*/
 let publicUrl = "/data/"
 //列表图片url地址前缀
-let prefix_url = "https://img.kuakedata.com/"
 let login_url = "/login"
 let url_404 = "/404"
 let url_500 = "/500"
@@ -10,6 +9,7 @@ let expire_date = (new Date().getTime() / 1000) + 86400
 //发送验证码
 let url_verify = '/common/verify'
 let url_login = '/common/login'
+let url_upload = '/common/upload'
 let url_get_sub_list = '/subject/get/list'
 let url_set_sub_try = '/subject/set/try'
 let url_get_sub_detail = '/subject/get/detail'
@@ -22,7 +22,42 @@ let url_set_user_change_password = '/user/set/change_password'
 let url_get_user_login_history = '/user/get/login_record'
 let url_get_user_order_list = '/user/get/order_list'
 let url_get_user_learn_record = '/user/get/learn_record'
-let url_upload = '/common/upload'
+let url_get_user_list = '/manage/get/user/list'
+let url_set_edit_user = '/manage/set/edit/user/data'
+let url_get_manage_list = '/manage/get/list'
+let url_set_edit_manage_data = '/manage/set/edit/data'
+let url_get_package_list = '/manage/get/package/list'
+let url_get_package_select_list = '/manage/get/package/select/list'
+let url_set_package_edit = '/manage/set/package/edit'
+let url_set_package_del = '/manage/set/package/del'
+
+let url_get_subject_list = '/manage/get/subject/list'
+let url_get_subject_select_list = '/manage/get/subject/select/list'
+let url_set_subject_edit = '/manage/set/subject/edit'
+let url_set_subject_del = '/manage/set/subject/del'
+
+let url_get_chapter_list = '/manage/get/chapter/list'
+let url_get_chapter_select_list = '/manage/get/chapter/select/list'
+let url_set_chapter_edit = '/manage/set/chapter/edit'
+let url_set_chapter_del = '/manage/set/chapter/del'
+
+let url_get_section_list = '/manage/get/section/list'
+let url_get_section_select_list = '/manage/get/section/select/list'
+let url_set_section_edit = '/manage/set/section/edit'
+let url_set_section_del = '/manage/set/section/del'
+
+let url_get_piece_list = '/manage/get/piece/list'
+let url_get_piece_select_list = '/manage/get/piece/select/list'
+let url_set_piece_edit = '/manage/set/piece/edit'
+let url_set_piece_del = '/manage/set/piece/del'
+
+let url_get_question_list = '/manage/get/question/list'
+let url_set_question_edit = '/manage/set/question/edit'
+let url_set_question_del = '/manage/set/question/del'
+
+let url_get_question_option_list = '/manage/get/question/option/list'
+let url_set_question_option_edit = '/manage/set/question/option/edit'
+let url_set_question_option_del = '/manage/set/question/option/del'
 
 /*=========================================公共方法-开始=========================================*/
 
@@ -134,6 +169,13 @@ function formatDateCommon(v, format) {
         str = str1 + " " + str2
     }
     return str;
+}
+
+function logoImg(logo) {
+    if (logo == undefined || logo == "" || logo == " ") {
+        return "--"
+    }
+    return '<div><img style="height:25px;width:25px;border-radius:5px;" src="' + logo + '"></div>'
 }
 
 let maps = [

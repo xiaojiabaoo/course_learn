@@ -5,6 +5,7 @@ import (
 	"course_learn/model/resp_model"
 	"course_learn/service/common_ser"
 	"course_learn/service/user_ser"
+	"course_learn/tools"
 	custErr "course_learn/tools/error"
 	"course_learn/tools/response"
 	"github.com/gin-gonic/gin"
@@ -154,12 +155,20 @@ func GetLoginRecord(c *gin.Context) {
 		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
 		return
 	}
-	info, err := apiCommon.GetUserInfo(c)
-	if err != nil {
-		response.ResponseData(c, err, nil)
-		return
+	if param.Action == tools.USER_LOGIN || len(param.Action) == 0 {
+		info, err := apiCommon.GetUserInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
+		param.UserId = info
+	} else if param.Action == tools.MANAGER_LOGIN {
+		_, err = apiCommon.GetManageInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
 	}
-	param.UserId = info
 	data, err = apiQuestion.GetLoginRecord(param)
 	if err != nil {
 		response.ResponseData(c, err, nil)
@@ -181,12 +190,20 @@ func GetOrderList(c *gin.Context) {
 		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
 		return
 	}
-	info, err := apiCommon.GetUserInfo(c)
-	if err != nil {
-		response.ResponseData(c, err, nil)
-		return
+	if param.Action == tools.USER_LOGIN || len(param.Action) == 0 {
+		info, err := apiCommon.GetUserInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
+		param.UserId = info
+	} else if param.Action == tools.MANAGER_LOGIN {
+		_, err = apiCommon.GetManageInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
 	}
-	param.UserId = info
 	data, err = apiQuestion.GetOrderList(param)
 	if err != nil {
 		response.ResponseData(c, err, nil)
@@ -208,16 +225,75 @@ func GetLearnRecord(c *gin.Context) {
 		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
 		return
 	}
-	info, err := apiCommon.GetUserInfo(c)
-	if err != nil {
-		response.ResponseData(c, err, nil)
-		return
+	if param.Action == tools.USER_LOGIN || len(param.Action) == 0 {
+		info, err := apiCommon.GetUserInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
+		param.UserId = info
+	} else if param.Action == tools.MANAGER_LOGIN {
+		_, err = apiCommon.GetManageInfo(c)
+		if err != nil {
+			response.ResponseData(c, err, nil)
+			return
+		}
 	}
-	param.UserId = info
 	data, err = apiQuestion.GetLearnRecord(param)
 	if err != nil {
 		response.ResponseData(c, err, nil)
 		return
 	}
 	response.ResponseData(c, nil, data)
+}
+
+func GetUserList(c *gin.Context) {
+	var (
+		param       = req_model.GetUserList{}
+		err         error
+		apiQuestion = user_ser.ApiUser{}
+		apiCommon   = common_ser.ApiCommon{}
+		data        = resp_model.GetUserListData{}
+	)
+	err = c.ShouldBind(&param)
+	if err != nil {
+		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
+		return
+	}
+	_, err = apiCommon.GetManageInfo(c)
+	if err != nil {
+		response.ResponseData(c, err, nil)
+		return
+	}
+	data, err = apiQuestion.GetUserList(param)
+	if err != nil {
+		response.ResponseData(c, err, nil)
+		return
+	}
+	response.ResponseData(c, nil, data)
+}
+
+func EditUserData(c *gin.Context) {
+	var (
+		param       = req_model.EditUserData{}
+		err         error
+		apiQuestion = user_ser.ApiUser{}
+		apiCommon   = common_ser.ApiCommon{}
+	)
+	err = c.ShouldBindJSON(&param)
+	if err != nil {
+		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
+		return
+	}
+	_, err = apiCommon.GetManageInfo(c)
+	if err != nil {
+		response.ResponseData(c, err, nil)
+		return
+	}
+	err = apiQuestion.EditUserData(param)
+	if err != nil {
+		response.ResponseData(c, err, nil)
+		return
+	}
+	response.ResponseData(c, nil, nil)
 }

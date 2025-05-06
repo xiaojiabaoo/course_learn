@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>学习平台</title>
+  <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+  <link rel="stylesheet" href="/static/css/config.css">
+</head>
+<body>
+<div id="add-main" style="display: none;">
+  <form class="layui-form" id="add-form" action="">
+    <div style="height: 30px;"></div>
+    <div class="layui-form-item" style="display: none;">
+      <label class="layui-form-label">块ID</label>
+      <div class="layui-input-inline">
+        <input type="text" readonly value="" id="open_piece_id" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_add_package_id">
+      <label class="layui-form-label">所属专业</label>
+      <div class="layui-input-inline">
+        <select name="open_package_id" id="open_package_id" class="open_package_id" lay-search="open_package_id" lay-filter="open_package_id">
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_update_package_id" style="display: none">
+      <label class="layui-form-label">所属专业</label>
+      <div class="layui-input-inline">
+        <input type="text" name="open_package_id" style="background-color: #eee" readonly value="" class="layui-input open_package_id">
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_add_subject_id">
+      <label class="layui-form-label">所属课程</label>
+      <div class="layui-input-inline">
+        <select name="open_subject_id" id="open_subject_id" class="open_subject_id" lay-search="open_subject_id" lay-filter="open_subject_id">
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_update_subject_id" style="display: none">
+      <label class="layui-form-label">所属课程</label>
+      <div class="layui-input-inline">
+        <input type="text" name="open_subject_id" style="background-color: #eee" readonly value="" class="layui-input open_subject_id">
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_add_chapter_id">
+      <label class="layui-form-label">所属学习章</label>
+      <div class="layui-input-inline">
+        <select name="open_chapter_id" id="open_chapter_id" lay-search="open_chapter_id" lay-filter="open_chapter_id">
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_update_chapter_id" style="display: none">
+      <label class="layui-form-label">所属学习章</label>
+      <div class="layui-input-inline">
+        <input type="text" name="open_chapter_id" style="background-color: #eee" readonly value="" class="layui-input open_chapter_id">
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_add_section_id">
+      <label class="layui-form-label">所属学习节</label>
+      <div class="layui-input-inline">
+        <select name="open_section_id" id="open_section_id" lay-search="open_section_id" lay-filter="open_section_id">
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item" id="open_update_section_id" style="display: none">
+      <label class="layui-form-label">所属学习节</label>
+      <div class="layui-input-inline">
+        <input type="text" name="open_section_id" style="background-color: #eee" readonly value="" class="layui-input open_section_id">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">学习块名称</label>
+      <div class="layui-input-inline">
+        <input type="text" name="open_piece_name" value="" id="open_piece_name" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">学习块状态</label>
+      <div class="layui-input-inline">
+        <select name="open_piece_status" id="open_piece_status" lay-search="open_piece_status" lay-filter="open_piece_status">
+          <option value="2">下架</option>
+          <option value="1">上架</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" id="open_btn" lay-submit lay-filter="open_btn" style="margin-left: 35px;margin-top: 55px;">保存</button>
+      </div>
+    </div>
+  </form>
+</div>
+<form class="layui-form" action="">
+  <div style="height: 15px;"></div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">所属专业</label>
+    <div class="layui-input-inline">
+      <select name="package_id" id="package_id" lay-search="package_id" lay-filter="package_id">
+      </select>
+    </div>
+    <label class="layui-form-label">所属课程</label>
+    <div class="layui-input-inline">
+      <select name="subject_id" id="subject_id" lay-search="subject_id" lay-filter="subject_id">
+      </select>
+    </div>
+    <label class="layui-form-label">所属学习章</label>
+    <div class="layui-input-inline">
+      <select name="chapter_id" id="chapter_id" lay-search="chapter_id" lay-filter="chapter_id">
+        <option value="0">请选择</option>
+      </select>
+    </div>
+    <button type="button" lay-submit lay-filter="reset" class="layui-btn">重置</button>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">所属学习节</label>
+    <div class="layui-input-inline">
+      <select name="chapter_id" id="section_id" lay-search="section_id" lay-filter="section_id">
+        <option value="0">请选择</option>
+      </select>
+    </div>
+    <label class="layui-form-label">学习块名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="piece_name" id="piece_name" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">学习块状态</label>
+    <div class="layui-input-inline">
+      <select name="piece_status" id="piece_status" lay-search="piece_status" lay-filter="piece_status">
+        <option value="">请选择</option>
+        <option value="1">上架</option>
+        <option value="2">下架</option>
+      </select>
+    </div>
+  </div>
+</form>
+<div style="width: 96%;margin-left: 2%;">
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <div style="float: right;">
+        <button type="button" class="layui-btn" lay-submit lay-filter="add_piece" id="add_piece">添加学习块</button>
+      </div>
+    </div>
+  </form>
+  <table class="layui-hide" id="piecelist" lay-filter="piecelist"></table>
+</div>
+<ul class="layui-fixbar" style="bottom: 75px;"><li class="layui-icon layui-fixbar-top" lay-type="top" style="display: none;"></li></ul>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs" lay-event="edits">编辑</a>
+  <a class="layui-btn layui-btn-primary layui-border-red layui-btn-xs" lay-event="del">删除</a>
+<!--
+  <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+-->
+</script>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+
+<script>
+  layui.use('table', function(){
+    let table = layui.table;
+    let form = layui.form;
+    let manage_token = localStorage.getItem("manage_token");
+    let tableData = table.render({
+      elem: '#piecelist',
+      url:url_get_piece_list,
+      method: 'POST',
+      headers: {"token": manage_token},
+      request: {
+        pageName: 'page', //页码的参数名称，默认：page
+        limitName: 'size' //每页数据量的参数名，默认：limit
+      },
+      cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+      cols: [[
+        {field:'id', title: 'ID', minWidth: 120},
+        {field:'package_name', title: '专业名称', minWidth: 200},
+        {field:'subject_name', title: '课程名称', minWidth: 200},
+        {field:'chapter_name', title: '学习章名称', minWidth: 200},
+        {field:'section_name', title: '学习节名称', minWidth: 300},
+        {field:'name', title: '学习块名称', minWidth: 300},
+        {field:'add_time', title: '添加时间',minWidth: 160,
+          templet: function (e) {
+            return formatDateCommon(e.add_time*1000, "yyyy-MM-dd hh:mm:ss")
+          }
+        },
+        {field:'update_time', title: '修改时间',minWidth: 160,
+          templet: function (e) {
+            return formatDateCommon(e.update_time*1000, "yyyy-MM-dd hh:mm:ss")
+          }
+        },
+        {field:'status', title: '学习块状态',width: 100, align: "center", fixed: 'right',
+          templet: function (e) {
+            switch (e.status) {
+              case 1:
+                return "<span style='color: green'>上架</span>"
+              case 2:
+                return "<span style='color: red'>下架</span>"
+              default:
+                return "--"
+            }
+          }
+        },
+        {field:'right', title: '操作', minWidth: 120, align: 'center',fixed: 'right',toolbar: '#barDemo'}
+      ]],
+      page: true,
+      limit: 20,
+      limits: [20, 30, 40, 50],
+      parseData: function(res) { // res 即为原始返回的数据
+        return {
+          "code": res.code, // 返回码，一般为0表示成功
+          "msg": res.msg, // 提示信息
+          "count": res.data.count, // 数据总数，如果有的话
+          "data": res.data.list // 解析后的数据列表
+        };
+      },
+      done: function (res, curr, count) {
+        jump_login(res)
+      }
+    });
+    form.render();
+
+    form.on('select(package_id)', function (data) {
+      init_subject_select(data.value,"")
+      $("#chapter_id").val("")
+      $("#chapter_id").html("")
+      $("#section_id").val("")
+      $("#section_id").html("")
+      search()
+    });
+
+    form.on('select(open_package_id)', function (data) {
+      init_subject_select(data.value,"open")
+      $("#open_chapter_id").val("")
+      $("#open_chapter_id").html("")
+      $("#open_section_id").val("")
+      $("#open_section_id").html("")
+      form.render();
+    });
+
+    form.on('select(subject_id)', function (data) {
+      init_chapter_select(data.value,"")
+      $("#section_id").val("")
+      $("#section_id").html("")
+      search()
+    });
+
+    form.on('select(open_subject_id)', function (data) {
+      init_chapter_select(data.value,"open")
+      $("#open_section_id").val("")
+      $("#open_section_id").html("")
+      form.render();
+    });
+
+    form.on('select(chapter_id)', function (data) {
+      init_section_select(data.value,"")
+      search()
+    });
+
+    form.on('select(open_chapter_id)', function (data) {
+      init_section_select(data.value,"open")
+    });
+
+    form.on('select(section_id)', function(data) {
+      search()
+    });
+
+    form.on('select(piece_status)', function(data) {
+      search()
+    })
+
+    $("#piece_name").on("input",function(e){
+      search()
+    });
+
+    window.search = function () {
+      let piece_status = $("#piece_status").val();
+      let piece_name = $("#piece_name").val();
+      let section_id = $("#section_id").val();
+      let chapter_id = $("#chapter_id").val();
+      let subject_id = $("#subject_id").val();
+      let package_id = $("#package_id").val();
+      tableData.reload({
+        where: {
+          status: piece_status,
+          name: piece_name,
+          section_id: section_id,
+          chapter_id: chapter_id,
+          subject_id: subject_id,
+          package_id: package_id,
+        },
+        page: {
+          curr: 1
+        }
+      });
+      form.render();
+    }
+
+    form.on('submit(reset)', function (data) {
+      $("#piece_status").val("");
+      $("#piece_name").val("");
+      $("#section_id").val("");
+      $("#section_id").html("");
+      $("#chapter_id").val("");
+      $("#chapter_id").html("");
+      $("#subject_id").val("");
+      $("#subject_id").html("");
+      $("#package_id").val("");
+      search()
+      form.render();
+    });
+
+    let open_update
+    table.on('tool(piecelist)', function (obj) {
+      let data = obj.data //获得当前行数据
+      let layEvent = obj.event; //获得 lay-event 对应的值
+       switch (layEvent) {
+         case 'edits':
+           open_update = layer.open({
+             type: 1,
+             title: "编辑章",
+             shift: 3,
+             area: ['350px', '520px'],
+             content: $("#add-main"),
+             success: function (layero, index) {
+               $(".open_package_id").val(data.package_name)
+               $(".open_subject_id").val(data.subject_name)
+               $(".open_chapter_id").val(data.chapter_name)
+               $(".open_section_id").val(data.section_name)
+               $("#open_piece_id").val(data.id)
+               $("#open_section_id").val(data.section_id)
+               $("#open_piece_name").val(data.name)
+               $("#open_piece_status").val(data.status)
+               $("#open_add_package_id").hide()
+               $("#open_update_package_id").show()
+               $("#open_add_subject_id").hide()
+               $("#open_update_subject_id").show()
+               $("#open_add_chapter_id").hide()
+               $("#open_update_chapter_id").show()
+               $("#open_add_section_id").hide()
+               $("#open_update_section_id").show()
+               form.render();
+             },
+             yes: function () {
+
+             },
+             end: function (res) {
+               $("#add-main").css("display",'none');
+             }
+           });
+           break
+         case 'del':
+           layer.confirm("确定要删除吗？", {
+             btn: ['确定', '取消'],
+             cancel: function (index, layero) {
+             }
+           }, function () {
+             let params = '{"id":'+data.id+'}'
+             let result = sendApi(url_set_piece_del, params, "POST", manage_token)
+             if (result.code == 0) {
+               layer.msg("删除成功", {icon: 1}, function (index) {
+                 search()
+               });
+             } else {
+               layer.msg(result.msg, {icon: 2,anim: 6});
+             }
+           }, function () {
+             form.render();
+             layer.close();
+           });
+           break
+       }
+    });
+
+    let add_piece
+    form.on('submit(add_piece)', function (data) {
+      add_piece = layer.open({
+        type: 1,
+        title: "添加章",
+        shift: 3,
+        area: ['350px', '520px'],
+        content: $("#add-main"),
+        success: function (layero, index) {
+          $("#open_piece_id").val("")
+          $("#open_section_id").val("")
+          $("#open_piece_name").val("")
+          $("#open_piece_status").val("2")
+          $("#open_add_package_id").show()
+          $("#open_update_package_id").hide()
+          $("#open_add_subject_id").show()
+          $("#open_update_subject_id").hide()
+          $("#open_add_chapter_id").show()
+          $("#open_update_chapter_id").hide()
+          $("#open_add_section_id").show()
+          $("#open_update_section_id").hide()
+          form.render();
+        },
+        yes: function () {
+
+        },
+        end: function (res) {
+          $("#add-main").css("display",'none');
+        }
+      });
+    });
+
+    $("#open_btn").click(function(){
+      let open_piece_id = $("#open_piece_id").val()
+      let open_section_id = $("#open_section_id").val()
+      let open_piece_name = $("#open_piece_name").val()
+      let open_piece_status = $("#open_piece_status").val()
+      if (open_piece_id == undefined || open_piece_id == '') {
+        open_piece_id = 0
+      }
+      if (open_section_id == undefined || open_section_id == '') {
+        open_section_id = 0
+      }
+      if (open_piece_status == undefined || open_piece_status == '') {
+        open_piece_status = 2
+      }
+      let params = '{"section_id":'+open_section_id+',"id":'+open_piece_id+',' +
+              '"name":"'+open_piece_name+'",' +
+              '"status":'+open_piece_status+'}'
+      let result = sendApi(url_set_piece_edit, params, "POST", manage_token)
+      if (result.code == 0) {
+        layer.msg("保存成功", {icon: 1}, function (index) {
+          layer.close(open_update)
+          layer.close(add_piece)
+          search()
+        });
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+      return false
+    });
+
+    window.init_section_select = function (chapter_id,action) {
+      let params = '{"chapter_id":'+chapter_id+'}'
+      let result = sendApi(url_get_section_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+        }
+        if (action == "") {
+          $("#section_id").html("")
+          $("#section_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_section_id").html("")
+          $("#open_section_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_chapter_select = function (subject_id,action) {
+      let params = '{"subject_id":'+subject_id+'}'
+      let result = sendApi(url_get_chapter_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].id+'">'+data[i].name+'</option>'
+        }
+        if (action == "") {
+          $("#chapter_id").html("")
+          $("#chapter_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_chapter_id").html("")
+          $("#open_chapter_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_subject_select = function (package_id,action) {
+      let params = '{"package_id":'+package_id+'}'
+      let result = sendApi(url_get_subject_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].subject_id+'">'+data[i].subject_name+'</option>'
+        }
+        if (action == "") {
+          $("#subject_id").html("")
+          $("#subject_id").html('<option value="0">请选择</option>'+str)
+        } else if (action == "open") {
+          $("#open_subject_id").html("")
+          $("#open_subject_id").html(str)
+        }
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+
+    window.init_package_select = function () {
+      let params = '{}'
+      let result = sendApi(url_get_package_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].package_id+'">'+data[i].package_name+'</option>'
+        }
+        $("#package_id").html('<option value="0">请选择</option>'+str)
+        $("#open_package_id").html("")
+        $("#open_package_id").html(str)
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+    init_package_select()
+  });
+</script>
+
+</body>
+</html>

@@ -47,7 +47,13 @@ func Upload(c *gin.Context) {
 		apiCommon = common_ser.ApiCommon{}
 		file      = &multipart.FileHeader{}
 		upload    = resp_model.Upload{}
+		param     = req_model.Upload{}
 	)
+	err = c.ShouldBind(&param)
+	if err != nil {
+		response.ResponseData(c, custErr.New(custErr.INVALID_PARAMS, err.Error()), nil)
+		return
+	}
 	file, err = c.FormFile("file")
 	if err != nil {
 		response.ResponseData(c, err, nil)
@@ -57,6 +63,6 @@ func Upload(c *gin.Context) {
 		response.ResponseData(c, custErr.New(custErr.IMAGE_EMPTY_ERROR, err.Error()), nil)
 		return
 	}
-	upload, err = apiCommon.Upload(file)
+	upload, err = apiCommon.Upload(c, file, param)
 	response.ResponseData(c, err, upload)
 }

@@ -41,6 +41,7 @@ const (
 	ACCOUNT_NOT_EMPTY        = 30006
 	ACCOUNT_LOGIN_TYPE_ERROR = 30007
 	ACCOUNT_LOGIN_ERROR      = 30008
+	MANAGER_IDENTIFIER_ERROR = 30009
 	//验证码问题相关错误码
 	SECURITY_CODE_EXISTS = 40000
 	SMS_SEND_ERROR       = 40001
@@ -54,6 +55,39 @@ const (
 	USER_NOT_TRY_ORBUY_ERROR    = 50004
 	USER_CONFIRM_PASSWORD_ERROR = 50005
 	USER_PASSWORD_ERROR         = 50006
+	//管理员相关错误码
+	MANAGER_NOT_EXISTS = 60000
+	MANAGER_EXISTS     = 60001
+	//题库相关错误码
+	PACKAGE_NOT_EXISTS         = 70000
+	PACKAGE_HAS_SUBJECT        = 70001
+	SUBJECT_NOT_EXISTS         = 70002
+	SUBJECT_HAS_CHAPTER        = 70003
+	CHAPTER_NOT_EXISTS         = 70004
+	CHAPTER_HAS_SECTION        = 70005
+	SECTION_NOT_EXISTS         = 70006
+	SECTION_HAS_PIECE          = 70007
+	PIECE_NOT_EXISTS           = 70008
+	PIECE_HAS_QUESTION         = 70009
+	PACKAGE_NOT_EMPTY          = 70010
+	SUBJECT_NAME_NOT_EMPTY     = 70011
+	CHAPTER_NAME_NOT_EMPTY     = 70012
+	CHAPTER_SEQUENCE_NOT_EMPTY = 70013
+	CHAPTER_SUBJECT_NOT_EMPTY  = 70014
+
+	SECTION_NAME_NOT_EMPTY     = 70015
+	SECTION_SEQUENCE_NOT_EMPTY = 70016
+	SECTION_CHAPTER_NOT_EMPTY  = 70017
+
+	PIECE_NAME_NOT_EMPTY              = 70018
+	PIECE_SECTION_NOT_EMPTY           = 70019
+	SEQUENCE_NOT_EMPTY                = 70020
+	QUESTION_TYPE_NOT_EMPTY           = 70021
+	QUESTION_CONTENT_NOT_EMPTY        = 70022
+	QUESTION_EMPTY                    = 70023
+	QUESTION_OPTION_TITLE_NOT_EMPTY   = 70024
+	QUESTION_OPTION_CONTENT_NOT_EMPTY = 70025
+	OPTION_NOT_EXISTS                 = 70026
 )
 
 var ErrText = map[int64]string{
@@ -78,6 +112,7 @@ var ErrText = map[int64]string{
 	ACCOUNT_BLOCKED_ERROR:    "账号已被拉黑，请联系管理员处理！",
 	ACCOUNT_LOGIN_TYPE_ERROR: "用户登录类型错误",
 	ACCOUNT_LOGIN_ERROR:      "请登录账号",
+	MANAGER_IDENTIFIER_ERROR: "识别码错误",
 	//验证码问题相关错误码
 	SECURITY_CODE_EXISTS: "验证码已存在，请勿重复操作",
 	SECURITY_CODE_ERROR:  "验证码输入错误",
@@ -91,6 +126,37 @@ var ErrText = map[int64]string{
 	USER_NOT_TRY_ORBUY_ERROR:    "试用或购买该课程后才可以学习",
 	USER_CONFIRM_PASSWORD_ERROR: "新密码和确认密码不一致",
 	USER_PASSWORD_ERROR:         "原密码输入错误",
+	//管理员相关错误码
+	MANAGER_NOT_EXISTS:         "管理员不存在",
+	MANAGER_EXISTS:             "管理员已存在",
+	PACKAGE_NOT_EXISTS:         "专业不存在",
+	PACKAGE_NOT_EMPTY:          "专业不能为空",
+	PACKAGE_HAS_SUBJECT:        "专业下已经存在课程，请先删除课程",
+	SUBJECT_NOT_EXISTS:         "课程不存在",
+	SUBJECT_HAS_CHAPTER:        "专业下已经存在学习章，请先删除学习章",
+	CHAPTER_NOT_EXISTS:         "学习章不存在",
+	CHAPTER_HAS_SECTION:        "学习章下已经存在学习节，请先删除学习节",
+	SECTION_NOT_EXISTS:         "学习节不存在",
+	SECTION_HAS_PIECE:          "学习节下已经存在学习块，请先删除学习块",
+	PIECE_NOT_EXISTS:           "学习块不存在",
+	PIECE_HAS_QUESTION:         "学习块下已经存在题目，请先删除题目",
+	SUBJECT_NAME_NOT_EMPTY:     "课程名称不能为空",
+	CHAPTER_NAME_NOT_EMPTY:     "学习章名称不能为空",
+	CHAPTER_SEQUENCE_NOT_EMPTY: "学习章名顺序不能为空",
+	CHAPTER_SUBJECT_NOT_EMPTY:  "学习章所属课程不能为空",
+	SECTION_NAME_NOT_EMPTY:     "学习节名称不能为空",
+	SECTION_SEQUENCE_NOT_EMPTY: "学习节名顺序不能为空",
+	SECTION_CHAPTER_NOT_EMPTY:  "学习节所属学习章不能为空",
+
+	PIECE_NAME_NOT_EMPTY:              "学习块名称不能为空",
+	PIECE_SECTION_NOT_EMPTY:           "学习块所属学习节名称不能为空",
+	SEQUENCE_NOT_EMPTY:                "顺序不能为空",
+	QUESTION_TYPE_NOT_EMPTY:           "题目类型不能为空",
+	QUESTION_CONTENT_NOT_EMPTY:        "题目内容不能为空",
+	QUESTION_EMPTY:                    "题目不存在",
+	QUESTION_OPTION_TITLE_NOT_EMPTY:   "选项不能为空",
+	QUESTION_OPTION_CONTENT_NOT_EMPTY: "选项内容不能为空",
+	OPTION_NOT_EXISTS:                 "选项不存在",
 }
 
 func GetErrMsg(code int64) string {

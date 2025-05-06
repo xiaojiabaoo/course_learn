@@ -9,6 +9,7 @@ import (
 type Common interface {
 	GetUserDataByAccPass(account, password string) (*do.Users, error)
 	GetUserDataByAccount(account string) (*do.Users, error)
+	GetManagerDataByAccount(account string) (*do.Manager, error)
 }
 
 type ApiCommon struct{}
@@ -29,4 +30,13 @@ func (a *ApiCommon) GetUserDataByAccount(account string) (*do.Users, error) {
 		return nil, errors.Wrap(err, "根据账号获取用户信息失败")
 	}
 	return users, nil
+}
+
+func (a *ApiCommon) GetManagerDataByAccount(account string) (*do.Manager, error) {
+	manager := &do.Manager{}
+	err := gormx.DB.Where("account=? and status=1", account).First(manager).Error
+	if err != nil && err.Error() != "record not found" {
+		return nil, errors.Wrap(err, "根据账号获取管理员信息失败")
+	}
+	return manager, nil
 }

@@ -11,3 +11,15 @@ type Login struct {
 type Upload struct {
 	Src string `json:"src"`
 }
+
+type UserLoginLogs struct {
+	Id          int64  `json:"id"`
+	UserId      int64  `json:"user_id"`
+	LoginTime   int64  `json:"login_time"`
+	LoginIp     string `json:"login_ip"`
+	LoginArea   string `json:"login_area"`
+	LoginMethod int64  `json:"login_method"`
+	NickName    string `json:"nick_name"`
+	Phone       string `json:"phone"`
+	Email       string `json:"email"`
+}

@@ -12,13 +12,55 @@ type TChapterSection struct {
 }
 
 type TQuestionOption struct {
-	TQuestion `gorm:"extends"`
-	TOption   `gorm:"extends"`
+	/*TQuestion `gorm:"extends"`
+	TOption   `gorm:"extends"`*/
+	Id                int64  `json:"id"`
+	PieceId           int64  `json:"piece_id"`
+	Sequence          int64  `json:"sequence"`
+	QuestionType      string `json:"question_type"`
+	QuestionSource    string `json:"question_source"`
+	QuestionContent   string `json:"question_content"`
+	QuestionAnswer    string `json:"question_answer"`
+	Score             string `json:"score"`
+	MainNodeId        int64  `json:"main_node_id"`
+	MainNodeName      string `json:"main_node_name"`
+	MainNodeFrequency string `json:"main_node_frequency"`
+	Favorite          int64  `json:"favorite"`
+	CanPhoto          int64  `json:"can_photo"`
+	AvgCorrectRate    string `json:"avg_correct_rate"`
+	AnalysisType      int64  `json:"analysis_type"`
+	Analysis          string `json:"analysis"`
+	OptionId          int64  `json:"option_id"`
+	OptionSequence    int64  `json:"option_sequence"`
+	OptionTitle       string `json:"option_title"`
+	OptionContent     string `json:"option_content"`
+	OptionCorrect     int64  `json:"option_correct"`
 }
 
 type TChildQuestionOption struct {
-	TChildQuestion `gorm:"extends"`
-	TOption        `gorm:"extends"`
+	/*TChildQuestion `gorm:"extends"`
+	TOption        `gorm:"extends"`*/
+	Id                int64  `json:"id"`
+	PieceId           int64  `json:"piece_id"`
+	Sequence          int64  `json:"sequence"`
+	QuestionType      string `json:"question_type"`
+	QuestionSource    string `json:"question_source"`
+	QuestionContent   string `json:"question_content"`
+	QuestionAnswer    string `json:"question_answer"`
+	Score             string `json:"score"`
+	MainNodeId        int64  `json:"main_node_id"`
+	MainNodeName      string `json:"main_node_name"`
+	MainNodeFrequency string `json:"main_node_frequency"`
+	Favorite          int64  `json:"favorite"`
+	CanPhoto          int64  `json:"can_photo"`
+	AvgCorrectRate    string `json:"avg_correct_rate"`
+	AnalysisType      int64  `json:"analysis_type"`
+	Analysis          string `json:"analysis"`
+	OptionId          int64  `json:"option_id"`
+	OptionSequence    int64  `json:"option_sequence"`
+	OptionTitle       string `json:"option_title"`
+	OptionContent     string `json:"option_content"`
+	OptionCorrect     int64  `json:"option_correct"`
 }
 
 type SubjectByPieceId struct {
@@ -44,4 +86,7 @@ type SubjectByPiece struct {
 type UserOrderList struct {
 	UserOrder   `gorm:"extends"`
 	SubjectName string `json:"subject_name"`
+	NickName    string `json:"nick_name"`
+	Phone       string `json:"phone"`
+	Email       string `json:"email"`
 }

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="http://127.0.0.1:8080/static/image/logo.jpg" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>学习平台</title>
+  <link rel="stylesheet" href="/static/js/layui-v2.6.8/css/layui.css">
+  <link rel="stylesheet" href="/static/css/config.css">
+</head>
+<body>
+<div id="add-main" style="display: none;">
+  <form class="layui-form" id="add-form" action="">
+    <div style="height: 30px;"></div>
+    <div class="layui-form-item" style="display: none;">
+      <label class="layui-form-label">课程ID</label>
+      <div class="layui-input-inline">
+        <input type="text" readonly value="" id="open_subject_id" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">所属专业</label>
+      <div class="layui-input-inline">
+        <select name="open_package_id" id="open_package_id" lay-search="open_package_id" lay-filter="open_package_id">
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">课程名称</label>
+      <div class="layui-input-inline">
+        <input type="text" name="open_subject_name" value="" id="open_subject_name" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item" id="subject_logo">
+      <label class="layui-form-label">课程封面</label>
+      <div class="layui-input-inline">
+        <button type="button" class="layui-btn layui-btn-xs" id="logoBtn">上传图片</button>
+        <div class="layui-upload-list">
+          <img class="layui-upload-img" id="logoImg" style="width: 200px;height: 100px">
+          <p id="logoText"></p>
+          <input type="hidden" name="logo" id="logo" />
+          <span class="span_ds">注意：上传图片完成自动保存</span>
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">排序</label>
+      <div class="layui-input-inline">
+        <input type="number" name="open_subject_sort" value="" id="open_subject_sort" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">简介说明</label>
+      <div class="layui-input-inline">
+        <textarea name="open_subject_desc" id="open_subject_desc" placeholder="请输入内容" class="layui-textarea"></textarea>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">是否热门</label>
+      <div class="layui-input-inline">
+        <select name="open_subject_hot" id="open_subject_hot" lay-search="open_subject_hot" lay-filter="open_subject_hot">
+          <option value="0">否</option>
+          <option value="1">是</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">课程状态</label>
+      <div class="layui-input-inline">
+        <select name="open_subject_status" id="open_subject_status" lay-search="open_subject_status" lay-filter="open_subject_status">
+          <option value="2">下架</option>
+          <option value="1">上架</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn" id="open_btn" lay-submit lay-filter="open_btn" style="margin-left: 35px;margin-top: 55px;">保存</button>
+      </div>
+    </div>
+  </form>
+</div>
+<form class="layui-form" action="">
+  <div style="height: 15px;"></div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">专业</label>
+    <div class="layui-input-inline">
+      <select name="package_id" id="package_id" lay-search="package_id" lay-filter="package_id">
+        <option value="0">请选择</option>
+      </select>
+    </div>
+    <label class="layui-form-label">课程名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="subject_name" id="subject_name" autocomplete="off" class="layui-input">
+    </div>
+    <label class="layui-form-label">状态</label>
+    <div class="layui-input-inline">
+      <select name="subject_status" id="subject_status" lay-search="subject_status" lay-filter="subject_status">
+        <option value="">请选择</option>
+        <option value="1">上架</option>
+        <option value="2">下架</option>
+      </select>
+    </div>
+    <button type="button" lay-submit lay-filter="reset" class="layui-btn">重置</button>
+  </div>
+</form>
+<div style="width: 96%;margin-left: 2%;">
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <div style="float: right;">
+        <button type="button" class="layui-btn" lay-submit lay-filter="add_subject" id="add_subject">添加课程</button>
+      </div>
+    </div>
+  </form>
+  <table class="layui-hide" id="subjectlist" lay-filter="subjectlist"></table>
+</div>
+<ul class="layui-fixbar" style="bottom: 75px;"><li class="layui-icon layui-fixbar-top" lay-type="top" style="display: none;"></li></ul>
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-primary layui-border-blue layui-btn-xs" lay-event="edits">编辑</a>
+  <a class="layui-btn layui-btn-primary layui-border-red layui-btn-xs" lay-event="del">删除</a>
+<!--
+  <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+-->
+</script>
+<script src="/static/js/layui-v2.6.8/layui.js"></script>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.js"></script>
+<script src="/static/js/config.js" charset="utf-8"></script>
+
+<script>
+  layui.use(['table','upload'], function(){
+    let table = layui.table;
+    let form = layui.form;
+    let upload = layui.upload;
+    let manage_token = localStorage.getItem("manage_token");
+    let tableData = table.render({
+      elem: '#subjectlist',
+      url:url_get_subject_list,
+      method: 'POST',
+      headers: {"token": manage_token},
+      request: {
+        pageName: 'page', //页码的参数名称，默认：page
+        limitName: 'size' //每页数据量的参数名，默认：limit
+      },
+      cellMinWidth: 80, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+      cols: [[
+        {field:'subject_id', title: 'ID', minWidth: 120},
+        {field:'package_name', title: '专业名称', minWidth: 220},
+        {field:'subject_name', title: '课程名称', minWidth: 220},
+        {field:'sort', title: '排序', minWidth: 60},
+        {field:'desc', title: '课程简介说明', minWidth: 300},
+        {field:'is_hot', title: '是否热门', minWidth: 100, align: "center",
+          templet: function (e) {
+            switch (e.is_hot) {
+              case 0:
+                return "非热门"
+              case 1:
+                return "热门"
+              default:
+                return "--"
+            }
+          }
+        },
+        {field:'add_time', title: '添加时间',minWidth: 160,
+          templet: function (e) {
+            return formatDateCommon(e.add_time*1000, "yyyy-MM-dd hh:mm:ss")
+          }
+        },
+        {field:'update_time', title: '修改时间',minWidth: 160,
+          templet: function (e) {
+            return formatDateCommon(e.update_time*1000, "yyyy-MM-dd hh:mm:ss")
+          }
+        },
+        {field:'status', title: '状态',width: 100, align: "center", fixed: 'right',
+          templet: function (e) {
+            switch (e.status) {
+              case 1:
+                return "<span style='color: green'>上架</span>"
+              case 2:
+                return "<span style='color: red'>下架</span>"
+              default:
+                return "--"
+            }
+          }
+        },
+        {field:'right', title: '操作', minWidth: 120, align: 'center',fixed: 'right',toolbar: '#barDemo'}
+      ]],
+      page: true,
+      limit: 20,
+      limits: [20, 30, 40, 50],
+      parseData: function(res) { // res 即为原始返回的数据
+        return {
+          "code": res.code, // 返回码，一般为0表示成功
+          "msg": res.msg, // 提示信息
+          "count": res.data.count, // 数据总数，如果有的话
+          "data": res.data.list // 解析后的数据列表
+        };
+      },
+      done: function (res, curr, count) {
+        jump_login(res)
+      }
+    });
+    form.render();
+
+    form.on('select(package_id)', function(data) {
+      search()
+    });
+
+    form.on('select(subject_status)', function(data) {
+      search()
+    })
+
+    $("#subject_name").on("input",function(e){
+      search()
+    });
+
+    window.search = function () {
+      let subject_status = $("#subject_status").val();
+      let subject_name = $("#subject_name").val();
+      let package_id = $("#package_id").val();
+      tableData.reload({
+        where: {
+          status: subject_status,
+          subject_name: subject_name,
+          package_id: package_id
+        },
+        page: {
+          curr: 1
+        }
+      });
+      form.render();
+    }
+
+    let uploads = upload.render({
+      elem: '#logoBtn',
+      url: url_upload, //改成您自己的上传接口
+      data:{
+        img_id: function(){
+          return $("#open_subject_id").val();
+        },
+        file_type: function(){
+          return "subject";
+        }
+      },
+      before: function (obj) {
+        //预读本地文件示例，不支持ie8
+        obj.preview(function (index, file, result) {
+          let subject_id = $("#open_subject_id").val();
+          $('#logoImg').attr('src', '/static/image/subject/'+subject_id+'.png'); //图片链接（base64）
+        });
+      },
+      done: function (res) {
+        //如果上传失败
+        if (res.ret > 0) {
+          return layer.msg("上传失败", {icon: 2,anim: 6});
+        }
+      },
+      error: function () {
+        //失败状态，并实现重传
+        let demoText = $('#logoText');
+        demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+        demoText.find('.demo-reload').on('click', function () {
+          upload.upload();
+        });
+      }
+    });
+
+    form.on('submit(reset)', function (data) {
+      $("#subject_status").val("");
+      $("#subject_name").val("");
+      $("#package_id").val("");
+      search()
+      form.render();
+    });
+
+    let open_update
+    table.on('tool(subjectlist)', function (obj) {
+      let data = obj.data //获得当前行数据
+      let layEvent = obj.event; //获得 lay-event 对应的值
+       switch (layEvent) {
+         case 'edits':
+           open_update = layer.open({
+             type: 1,
+             title: "编辑课程",
+             shift: 3,
+             area: ['350px', '570px'],
+             content: $("#add-main"),
+             success: function (layero, index) {
+               $("#open_subject_id").val(data.subject_id)
+               $("#open_package_id").val(data.package_id)
+               $("#open_subject_name").val(data.subject_name)
+               $("#open_subject_sort").val(data.sort)
+               $("#open_subject_desc").val(data.desc)
+               $("#open_subject_hot").val(data.is_hot)
+               $("#open_subject_status").val(data.status)
+               $("#subject_logo").show()
+               $('#logoImg').attr('src', '/static/image/subject/'+data.subject_id+'.png');
+               form.render();
+             },
+             yes: function () {
+
+             },
+             end: function (res) {
+               $("#add-main").css("display",'none');
+             }
+           });
+           break
+         case 'del':
+           layer.confirm("确定要删除吗？", {
+             btn: ['确定', '取消'],
+             cancel: function (index, layero) {
+             }
+           }, function () {
+             let params = '{"subject_id":'+data.subject_id+'}'
+             let result = sendApi(url_set_subject_del, params, "POST", manage_token)
+             if (result.code == 0) {
+               layer.msg("删除成功", {icon: 1}, function (index) {
+                 search()
+               });
+             } else {
+               layer.msg(result.msg, {icon: 2,anim: 6});
+             }
+           }, function () {
+             form.render();
+             layer.close();
+           });
+           break
+       }
+    });
+
+    let add_subject
+    form.on('submit(add_subject)', function (data) {
+      add_subject = layer.open({
+        type: 1,
+        title: "添加课程",
+        shift: 3,
+        area: ['350px', '570px'],
+        content: $("#add-main"),
+        success: function (layero, index) {
+          $("#open_package_id").val("")
+          $("#open_package_name").val("")
+          $("#open_package_status").val("")
+          $("#subject_logo").hide()
+          form.render();
+        },
+        yes: function () {
+
+        },
+        end: function (res) {
+          $("#add-main").css("display",'none');
+        }
+      });
+    });
+
+    $("#open_btn").click(function(){
+      let open_package_id = $("#open_package_id").val()
+      let open_subject_id = $("#open_subject_id").val()
+      let open_subject_name = $("#open_subject_name").val()
+      let open_subject_sort = $("#open_subject_sort").val()
+      let open_subject_desc = $("#open_subject_desc").val()
+      let open_subject_hot = $("#open_subject_hot").val()
+      let open_subject_status = $("#open_subject_status").val()
+      if (open_package_id == undefined || open_package_id == '') {
+        open_package_id = 0
+      }
+      if (open_subject_id == undefined || open_subject_id == '') {
+        open_subject_id = 0
+      }
+      if (open_subject_sort == undefined || open_subject_sort == '') {
+        open_subject_sort = 0
+      }
+      if (open_subject_hot == undefined || open_subject_hot == '') {
+        open_subject_hot = 0
+      }
+      if (open_subject_status == undefined || open_subject_status == '') {
+        open_subject_status = 2
+      }
+      let params = '{"package_id":'+open_package_id+',"subject_id":'+open_subject_id+',' +
+              '"subject_name":"'+open_subject_name+'","sort":'+open_subject_sort+',"desc":"'+open_subject_desc+'",' +
+              '"is_sort":'+open_subject_hot+',"status":'+open_subject_status+'}'
+      let result = sendApi(url_set_subject_edit, params, "POST", manage_token)
+      if (result.code == 0) {
+        layer.msg("保存成功", {icon: 1}, function (index) {
+          layer.close(open_update)
+          layer.close(add_subject)
+          search()
+        });
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+      return false
+    });
+
+    window.init_package_select = function () {
+      let params = '{}'
+      let result = sendApi(url_get_package_select_list, params, "POST", manage_token)
+      if (result.code == 0) {
+        let data = result.data
+        let str = ''
+        for (let i=0;i<data.length;i++) {
+          str += '<option value="'+data[i].package_id+'">'+data[i].package_name+'</option>'
+        }
+        $("#package_id").html($("#package_id").html()+str)
+        $("#open_package_id").html("")
+        $("#open_package_id").html(str)
+        form.render();
+      } else {
+        layer.msg(result.msg, {icon: 2,anim: 6});
+      }
+    }
+    init_package_select()
+  });
+</script>
+
+</body>
+</html>

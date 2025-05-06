@@ -15,16 +15,17 @@ type ApiQuestion struct{}
 
 func (a ApiQuestion) GetQuestionData(pieceId int64) ([]mysql_model.TQuestionOption, error) {
 	data := make([]mysql_model.TQuestionOption, 0, 0)
-	err := gormx.DB.Table("t_question").Select("t_question.id, t_question.piece_id, t_question.sequence, " +
-		"t_question.question_type, t_question.question_source, t_question.question_content, t_question.question_answer, " +
-		"t_question.score, t_question.main_node_id, t_question.main_node_name, t_question.main_node_frequency, " +
-		"t_question.favorite, t_question.can_photo, t_question.avg_correct_rate, t_question.analysis_type, " +
-		"t_question.analysis, t_option.id, t_option.question_id, t_option.sequence, t_option.title, t_option.content, " +
-		"t_option.correct").
-		Joins("LEFT JOIN t_option ON t_question.id = t_option.question_id").
-		Where("t_question.piece_id=?", pieceId).
-		Order("t_question.sequence ASC").
-		Order("t_option.sequence ASC").
+	err := gormx.DB.Table("t_question q").Select("q.id, q.piece_id, q.sequence, "+
+		"q.question_type, q.question_source, q.question_content, q.question_answer, "+
+		"q.score, q.main_node_id, q.main_node_name, q.main_node_frequency, "+
+		"q.favorite, q.can_photo, q.avg_correct_rate, q.analysis_type, "+
+		"q.analysis, o.id option_id, o.sequence option_sequence, o.title option_title, o.content option_content, "+
+		"o.correct option_correct").
+		Joins("LEFT JOIN t_option o ON q.id = o.question_id").
+		Where("q.piece_id=?", pieceId).
+		Where("q.status=1").
+		Order("q.sequence ASC").
+		Order("o.sequence ASC").
 		Scan(&data).Error
 	if err != nil {
 		return data, errors.Wrap(err, "根据块ID获取题目列表失败")
@@ -34,16 +35,16 @@ func (a ApiQuestion) GetQuestionData(pieceId int64) ([]mysql_model.TQuestionOpti
 
 func (a ApiQuestion) GetChildQuestionData(questionId, pieceId int64) ([]mysql_model.TChildQuestionOption, error) {
 	data := make([]mysql_model.TChildQuestionOption, 0, 0)
-	err := gormx.DB.Table("t_child_question").Select("t_child_question.id, t_child_question.piece_id, " +
-		"t_child_question.sequence, t_child_question.question_type, t_child_question.question_source, " +
-		"t_child_question.question_content, t_child_question.question_answer, t_child_question.score, " +
-		"t_child_question.main_node_id, t_child_question.main_node_name, t_child_question.main_node_frequency, " +
-		"t_child_question.favorite, t_child_question.can_photo, t_child_question.avg_correct_rate, " +
-		"t_child_question.analysis_type, t_child_question.analysis, t_option.id, t_option.question_id, " +
-		"t_option.sequence, t_option.title, t_option.content, t_option.correct").
-		Joins("LEFT JOIN t_option ON t_child_question.id = t_option.question_id").
-		Where("t_child_question.pid=? AND t_child_question.piece_id=?", questionId, pieceId).
-		Order("t_child_question.sequence ASC").Order("t_option.sequence ASC").Scan(&data).Error
+	err := gormx.DB.Debug().Table("t_child_question cq").Select("cq.id, cq.piece_id, "+
+		"cq.sequence, cq.question_type, cq.question_source, "+
+		"cq.question_content, cq.question_answer, cq.score, "+
+		"cq.main_node_id, cq.main_node_name, cq.main_node_frequency, "+
+		"cq.favorite, cq.can_photo, cq.avg_correct_rate, "+
+		"cq.analysis_type, cq.analysis, o.id option_id, "+
+		"o.sequence option_sequence, o.title option_title, o.content option_content, o.correct option_correct").
+		Joins("LEFT JOIN t_option o ON cq.id = o.question_id").
+		Where("cq.pid=? AND cq.piece_id=?", questionId, pieceId).
+		Order("cq.sequence ASC").Order("o.sequence ASC").Scan(&data).Error
 	if err != nil {
 		return data, errors.Wrap(err, "根据块ID获取题目列表失败")
 	}
